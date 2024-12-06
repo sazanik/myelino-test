@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosError, AxiosInstance, HeadersDefaults } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 
-export interface CustomHeaders extends HeadersDefaults {
-  Authorization?: string | null;
-}
+// export interface CustomHeaders extends HeadersDefaults {
+//   Authorization?: string | null;
+// }
 
 const baseURL = 'http://3.29.235.93:8080';
 
@@ -17,31 +17,28 @@ const axiosClient: AxiosInstance = axios.create({
 
 axiosClient.interceptors.request.use(
   async (config) => {
+    const newConfig = config;
+
     const cookies = await AsyncStorage.getItem('cookies');
     if (cookies) {
-      config.headers.Cookie = cookies;
+      newConfig.headers.Cookie = cookies;
     }
-    return config;
+
+    return newConfig;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 axiosClient.interceptors.response.use(
   async (response) => {
     const setCookieHeader = response.headers['set-cookie'];
     if (setCookieHeader) {
-      const cookies = setCookieHeader
-        .map((cookie) => cookie.split(';')[0])
-        .join('; ');
+      const cookies = setCookieHeader.map((cookie) => cookie.split(';')[0]).join('; ');
       await AsyncStorage.setItem('cookies', cookies);
     }
     return response;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
 export { axiosClient };

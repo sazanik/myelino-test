@@ -14,15 +14,15 @@ const oldDirPath = path.join(root, 'app');
 const newDirPath = path.join(root, 'app-example');
 const newAppDirPath = path.join(root, 'app');
 
-const indexContent = `import { Text, View } from "react-native";
+const indexContent = `import { Text, View } from 'react-native';
 
 export default function Index() {
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center'
       }}
     >
       <Text>Edit app/index.tsx to edit this screen.</Text>

@@ -1,22 +1,15 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
-
+/* eslint-disable global-require,@typescript-eslint/no-require-imports */
+import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { ROUTE } from '@/constants/routes';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+const RootLayout = () => {
   const [loaded] = useFonts({
     Inter: require('../assets/fonts/Inter.ttf'),
     RobotoBold: require('../assets/fonts/Roboto-Bold.ttf'),
@@ -37,16 +30,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack
-        initialRouteName="index"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="screens/planner" />
-      </Stack>
-    </ThemeProvider>
+    <Stack
+      initialRouteName={ROUTE.root}
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name={ROUTE.root} options={{ headerShown: false }} />
+      <Stack.Screen name={ROUTE.plan.plans} options={{ headerShown: false }} />
+      <Stack.Screen name={ROUTE.plan.details} options={{ headerShown: false }} />
+    </Stack>
   );
-}
+};
+
+export default RootLayout;
