@@ -14,3 +14,9 @@ export interface IEvent {
   dtEnd: Date | number;
   location?: string;
 }
+
+export interface IEventPlan {
+  id?: string;
+  title: string;
+  events: IEvent[];
+}

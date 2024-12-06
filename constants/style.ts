@@ -4,3 +4,5 @@ export const SCREEN_PADDING = {
 };
 
 export const ROUND_BORDER = 1000;
+
+export const TOUCHABLE_OPACITY = 0.7;

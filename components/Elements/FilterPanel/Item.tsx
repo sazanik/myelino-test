@@ -1,9 +1,9 @@
 import { FC, useCallback } from 'react';
 import { StyleProp, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
+import { TOUCHABLE_OPACITY } from '@/constants';
 import { useTheme } from '@/hooks';
-import { IOption } from '@/types/components';
-import { CreateStylesFn } from '@/types/styles';
+import { CreateStylesFn, IOption } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {
@@ -15,7 +15,7 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
   },
@@ -27,6 +27,7 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
   },
   selectedTitle: {
     color: colors.filterPanel.item.selectedText,
+    textDecorationLine: 'underline',
   },
 });
 
@@ -45,7 +46,11 @@ const Item: FC<Props> = ({ option, onPress, selected, style = {} }) => {
   }, [onPress, option]);
 
   return (
-    <TouchableOpacity onPress={handlePress} style={[styles.container, style]}>
+    <TouchableOpacity
+      style={[styles.container, style]}
+      activeOpacity={TOUCHABLE_OPACITY}
+      onPress={handlePress}
+    >
       <Text style={[styles.title, selected && styles.selectedTitle]}>{option.label}</Text>
     </TouchableOpacity>
   );

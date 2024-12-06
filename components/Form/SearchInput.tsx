@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Pressable, StyleProp, TextInput, View, ViewStyle } from 'react-native';
+import { FC } from 'react';
+import { Platform, StyleProp, TextInput, View, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/hooks';
-import { CreateStylesFn } from '@/types/styles';
+import { CreateStylesFn } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {
@@ -11,11 +11,18 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     backgroundColor: colors.common.componentBackground,
     borderRadius: 12,
     flexDirection: 'row',
-    gap: 10,
-    padding: 10,
+    columnGap: 10,
+    paddingHorizontal: 10,
   },
   input: {
+    // because lineHeight on Android is not configured
+    paddingVertical: Platform.select({ ios: 16, android: 10 }),
     flex: 1,
+    fontSize: 14,
+    // it works only for iOS
+    lineHeight: 16,
+    alignSelf: 'center',
+    color: colors.common.text.primary,
   },
   shadow: {
     shadowColor: colors.common.shadow.secondary,
@@ -25,7 +32,6 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-
     elevation: 5,
   },
   placeholder: {
@@ -35,35 +41,27 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 
 interface Props {
   value: string;
-  type?: 'email' | 'password';
-  style?: StyleProp<ViewStyle>;
   onChangeText?: (text: string) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
-const CustomInput = ({ type = 'email', value, onChangeText = () => {}, style = {} }: Props) => {
+const SearchInput: FC<Props> = ({ value, onChangeText = () => {}, style = {} }) => {
   const { styles, colors } = useTheme(createStyles);
-
-  const [visible, setVisible] = useState(false);
 
   return (
     <View style={[styles.container, styles.shadow, style]}>
-      <Ionicons name={type === 'email' ? 'mail-outline' : 'lock-closed-outline'} size={18} />
+      <Ionicons name="search-outline" size={16} color={colors.common.text.primary} />
       <TextInput
         style={styles.input}
         placeholderTextColor={colors.common.text.placeholder}
         value={value}
-        keyboardType={type === 'email' ? 'email-address' : 'default'}
         onChangeText={onChangeText}
-        secureTextEntry={type === 'password' && !visible}
-        placeholder={type === 'email' ? 'Email Address/Username' : 'Password'}
+        keyboardType="web-search"
+        placeholder="Search for the plans"
+        cursorColor={colors.common.text.brand}
       />
-      {type === 'password' && (
-        <Pressable onPress={() => setVisible(!visible)}>
-          <Ionicons name={visible ? 'eye-off-outline' : 'eye-outline'} size={18} />
-        </Pressable>
-      )}
     </View>
   );
 };
 
-export default CustomInput;
+export default SearchInput;

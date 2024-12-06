@@ -4,6 +4,7 @@ const PRIMARY_TEXT_COLOR = '#FFFFFF';
 // light colors theme
 const PRIMARY_TEXT_COLOR_LIGHT = '#292941';
 const SECONDARY_TEXT_COLOR_LIGHT = '#292941';
+const BRAND_TEXT_COLOR_LIGHT = '#008080';
 const PLACEHOLDER_TEXT_COLOR_LIGHT = '#888888';
 const BACKGROUND_COLOR_LIGHT = '#FFFFFF';
 const BRAND_GREEN_COLOR_LIGHT = '#008080';
@@ -13,11 +14,12 @@ const SECONDARY_SHADOW_COLOR_LIGHT = '#000000';
 // dark colors theme
 const PRIMARY_TEXT_COLOR_DARK = '#FFFFFF';
 const SECONDARY_TEXT_COLOR_DARK = '#FFFFFF';
+const BRAND_TEXT_COLOR_DARK = '#008080';
 const PLACEHOLDER_TEXT_COLOR_DARK = '#e1e1e1';
 const BACKGROUND_COLOR_DARK = '#292941';
 const BRAND_GREEN_COLOR_DARK = '#008080';
 const PRIMARY_SHADOW_COLOR_DARK = '#209090';
-const SECONDARY_SHADOW_COLOR_DARK = '#000000';
+const SECONDARY_SHADOW_COLOR_DARK = '#FFFFFF';
 
 export const COLORS = {
   light: {
@@ -28,18 +30,20 @@ export const COLORS = {
       },
       button: {
         primary: {
-          content: PRIMARY_TEXT_COLOR_LIGHT,
+          content: PRIMARY_TEXT_COLOR,
           background: BRAND_GREEN_COLOR_LIGHT,
         },
       },
       text: {
         primary: PRIMARY_TEXT_COLOR_LIGHT,
         secondary: SECONDARY_TEXT_COLOR_LIGHT,
+        brand: BRAND_TEXT_COLOR_LIGHT,
         placeholder: PLACEHOLDER_TEXT_COLOR_LIGHT,
       },
       screenBackground: BACKGROUND_COLOR_LIGHT,
       componentBackground: BACKGROUND_COLOR_LIGHT,
     },
+    loader: BRAND_GREEN_COLOR_LIGHT,
     header: {
       backButton: {
         content: 'BACKGROUND_COLOR_LIGHT',
@@ -70,18 +74,20 @@ export const COLORS = {
       },
       button: {
         primary: {
-          content: PRIMARY_TEXT_COLOR_DARK,
+          content: PRIMARY_TEXT_COLOR,
           background: BRAND_GREEN_COLOR_LIGHT,
         },
       },
       text: {
         primary: PRIMARY_TEXT_COLOR_DARK,
         secondary: SECONDARY_TEXT_COLOR_DARK,
+        brand: BRAND_TEXT_COLOR_DARK,
         placeholder: PLACEHOLDER_TEXT_COLOR_DARK,
       },
       screenBackground: BACKGROUND_COLOR_DARK,
       componentBackground: BACKGROUND_COLOR_DARK,
     },
+    loader: BRAND_GREEN_COLOR_LIGHT,
     header: {
       backButton: {
         content: 'BACKGROUND_COLOR_DARK',

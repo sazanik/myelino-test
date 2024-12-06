@@ -2,8 +2,8 @@ import { FC } from 'react';
 import { FlatList, StyleProp, ViewStyle } from 'react-native';
 
 import { useTheme } from '@/hooks';
+import { CreateStylesFn } from '@/types';
 import { IEvent } from '@/types/components';
-import { CreateStylesFn } from '@/types/styles';
 
 import Item from './Item/Item';
 

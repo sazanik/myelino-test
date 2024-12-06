@@ -1,13 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { FilterPanel, Header } from '@/components';
-import { EventList } from '@/components/Elements/EventList';
-import { MOCK_EVENTS, MOCK_FILTER_PANEL_ITEMS } from '@/constants/mocks';
-import { SCREEN_PADDING } from '@/constants/style';
-import { useTheme, useTypedNavigation } from '@/hooks';
-import { IEvent, IOption } from '@/types/components';
-import { CreateStylesFn } from '@/types/styles';
+import { DateGreeting, EventList, FilterPanel, Header, Loader, SearchInput } from '@/components';
+import { QUICK_PLANS, SCREEN_PADDING } from '@/constants';
+import { useEventsData, useTheme, useTypedNavigation } from '@/hooks';
+import { CreateStylesFn, IEvent, IOption } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors, insets }) => ({
   container: {
@@ -19,6 +16,12 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
   header: {
     marginTop: 20,
   },
+  dateGreeting: {
+    marginTop: 20,
+  },
+  searchInput: {
+    marginTop: 16,
+  },
   title: {
     marginTop: 10,
     fontSize: 20,
@@ -27,21 +30,37 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
     color: colors.common.text.primary,
     alignSelf: 'flex-start',
   },
-  filterPanel: {
-    // paddingTop to see top shadow
-    paddingTop: 8,
+  filterPanelContent: {
+    // padding to see top shadow
+    paddingVertical: 8,
   },
   eventList: {
+    marginTop: 10,
+  },
+  eventListContent: {
     columnGap: 4,
   },
 });
 
 const PlansDetailsScreen = () => {
   const { goBack } = useTypedNavigation();
-
   const { styles } = useTheme(createStyles);
 
-  const [selectedItem, setSelectedItem] = useState(MOCK_FILTER_PANEL_ITEMS[0]);
+  const { plansByMonths, loading } = useEventsData();
+
+  console.log(plansByMonths);
+
+  const planFilters = Object.entries(plansByMonths).map(([filterName, plans]) => ({
+    value: filterName,
+    label: filterName === QUICK_PLANS ? filterName : `${filterName.slice(0, 3)} (${plans.length})`,
+  }));
+
+  const [selectedItem, setSelectedItem] = useState<undefined | IOption>();
+
+  const quickPlanEvents = useMemo(
+    () => plansByMonths[QUICK_PLANS]?.flatMap((plan) => [...plan.events]),
+    [plansByMonths]
+  );
 
   const handleFilterItemPress = useCallback((option: IOption) => {
     setSelectedItem(option);
@@ -51,20 +70,27 @@ const PlansDetailsScreen = () => {
     console.log(event);
   }, []);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <View style={styles.container}>
       <Header style={styles.header} title="Planner" onBackPress={goBack} />
+      <DateGreeting style={styles.dateGreeting} />
+      <SearchInput style={styles.searchInput} value="" onChangeText={() => {}} />
       <Text style={styles.title}>Plans</Text>
       <FilterPanel
-        contentStyle={styles.filterPanel}
-        data={MOCK_FILTER_PANEL_ITEMS}
+        contentStyle={styles.filterPanelContent}
+        data={planFilters}
         onItemPress={handleFilterItemPress}
         selectedItem={selectedItem}
       />
       <EventList
-        contentStyle={styles.eventList}
+        style={styles.eventList}
+        contentStyle={styles.eventListContent}
         horizontal
-        data={MOCK_EVENTS}
+        data={quickPlanEvents}
         onItemPress={handleEventItemPress}
       />
     </View>

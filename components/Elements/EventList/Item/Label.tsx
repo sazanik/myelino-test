@@ -20,8 +20,7 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
   title: {
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: '400',
-    fontFamily: 'Roboto',
+    fontFamily: 'RobotoRegular',
     color: colors.eventList.item.label.content,
   },
   icon: {

@@ -11,6 +11,7 @@ import {
 
 import { LocationIcon, MoneyIcon, PeopleIcon } from '@/assets/icons';
 import Label from '@/components/Elements/EventList/Item/Label';
+import { TOUCHABLE_OPACITY } from '@/constants';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEvent } from '@/types';
 
@@ -87,7 +88,11 @@ const Item: FC<Props> = ({ event, onPress, style = null }) => {
   }, [onPress, event]);
 
   return (
-    <TouchableOpacity onPress={handlePress} style={[styles.container, style]}>
+    <TouchableOpacity
+      style={[styles.container, style]}
+      onPress={handlePress}
+      activeOpacity={TOUCHABLE_OPACITY}
+    >
       <Image
         style={styles.image as StyleProp<ImageStyle>}
         source={{ uri: event.imageUrl }}

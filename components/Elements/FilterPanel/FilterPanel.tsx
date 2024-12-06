@@ -2,8 +2,7 @@ import { FC } from 'react';
 import { FlatList, StyleProp, ViewStyle } from 'react-native';
 
 import { useTheme } from '@/hooks';
-import { IOption } from '@/types/components';
-import { CreateStylesFn } from '@/types/styles';
+import { CreateStylesFn, IOption } from '@/types';
 
 import Item from './Item';
 
@@ -21,16 +20,22 @@ const createStyles: CreateStylesFn = () => ({
 interface Props {
   data: IOption[];
   onItemPress: (item: IOption) => unknown;
-  selectedItem: IOption;
+  selectedItem?: IOption;
   style?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
 }
 
-const FilterPanel: FC<Props> = ({ data, selectedItem, onItemPress, style, contentStyle }) => {
+const FilterPanel: FC<Props> = ({
+  data,
+  onItemPress,
+  selectedItem = null,
+  style = {},
+  contentStyle = {},
+}) => {
   const { styles } = useTheme(createStyles);
 
   const renderItem = ({ item }: { item: IOption }) => (
-    <Item option={item} onPress={onItemPress} selected={selectedItem.value === item.value} />
+    <Item option={item} onPress={onItemPress} selected={selectedItem?.value === item.value} />
   );
 
   return (

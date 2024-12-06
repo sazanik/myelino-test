@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 import { ArrowBackIcon } from '@/assets/icons';
-import { ROUND_BORDER } from '@/constants/style';
+import { ROUND_BORDER, TOUCHABLE_OPACITY } from '@/constants/style';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn } from '@/types/styles';
 
@@ -43,7 +43,11 @@ const Header: FC<Props> = ({ title, onBackPress = () => {}, style = {} }) => {
 
   return (
     <View style={[styles.container, style]}>
-      <TouchableOpacity style={styles.leftAction} onPress={onBackPress}>
+      <TouchableOpacity
+        style={styles.leftAction}
+        activeOpacity={TOUCHABLE_OPACITY}
+        onPress={onBackPress}
+      >
         <ArrowBackIcon />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>

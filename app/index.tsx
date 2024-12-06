@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
   Image,
@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { CustomInput } from '@/components';
 import { axiosClient } from '@/config';
-import { ROUTE } from '@/constants';
+import { ROUTE, TOUCHABLE_OPACITY } from '@/constants';
 import { normalizeError } from '@/helpers';
 import { useForm, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn } from '@/types';
@@ -22,12 +22,6 @@ import { CreateStylesFn } from '@/types';
 import Logo from '../assets/images/logo.png';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
-  button: {
-    alignItems: 'center',
-    backgroundColor: colors.common.button.primary.background,
-    borderRadius: 50,
-    paddingVertical: 10,
-  },
   container: {
     backgroundColor: colors.common.screenBackground,
     flex: 1,
@@ -40,8 +34,15 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     marginVertical: 40,
   },
   form: {
-    marginVertical: 20,
+    marginTop: 20,
     rowGap: 20,
+  },
+  button: {
+    marginTop: 20,
+    alignItems: 'center',
+    backgroundColor: colors.common.button.primary.background,
+    borderRadius: 50,
+    paddingVertical: 12,
   },
   textButton: {
     color: colors.common.button.primary.content,
@@ -64,6 +65,20 @@ const AuthScreen = () => {
   });
 
   const [isLogged] = useState(true);
+
+  const handleIdentifierChange = useCallback(
+    (value: string) => {
+      onChange(value, 'identifier');
+    },
+    [onChange]
+  );
+
+  const handlePasswordChange = useCallback(
+    (value: string) => {
+      onChange(value, 'password');
+    },
+    [onChange]
+  );
 
   const handleLoginPress = async () => {
     if ([identifier, password].includes('')) {
@@ -98,14 +113,14 @@ const AuthScreen = () => {
       <View style={{ ...styles.container, paddingTop: top }}>
         <Image source={Logo} style={styles.logo as StyleProp<ImageStyle>} />
         <View style={styles.form}>
-          <CustomInput value={identifier} onChangeText={(value) => onChange(value, 'identifier')} />
-          <CustomInput
-            type="password"
-            value={password}
-            onChangeText={(value) => onChange(value, 'password')}
-          />
+          <CustomInput value={identifier} onChangeText={handleIdentifierChange} />
+          <CustomInput type="password" value={password} onChangeText={handlePasswordChange} />
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleLoginPress} activeOpacity={0.6}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLoginPress}
+          activeOpacity={TOUCHABLE_OPACITY}
+        >
           <Text style={styles.textButton}>Login</Text>
         </TouchableOpacity>
       </View>
