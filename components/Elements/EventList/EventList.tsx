@@ -11,7 +11,7 @@ const createStyles: CreateStylesFn = () => ({
     marginHorizontal: -20,
     flexGrow: 0,
   },
-  content: {
+  contentContainer: {
     paddingHorizontal: 20,
   },
 });
@@ -37,7 +37,7 @@ const EventList: FC<Props> = ({
   return (
     <FlatList
       style={[styles.container, style]}
-      contentContainerStyle={[styles.content, contentStyle]}
+      contentContainerStyle={[styles.contentContainer, contentStyle]}
       keyExtractor={(item, index) => item.id ?? index.toString()}
       horizontal={horizontal}
       data={data}

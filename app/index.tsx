@@ -103,7 +103,7 @@ const AuthScreen = () => {
 
   useEffect(() => {
     if (isLogged) {
-      setTimeout(() => navigation.navigate(ROUTE.plan.details), 0);
+      setTimeout(() => navigation.navigate(ROUTE.plan.plans), 0);
     }
   }, [isLogged, navigation]);
 

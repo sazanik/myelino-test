@@ -1,1 +1,1 @@
-export { default as PlanDetailsScreen } from './planDetails';
+export { default as PlansScreen } from './planDetails';

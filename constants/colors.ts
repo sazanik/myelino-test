@@ -3,7 +3,7 @@ const PRIMARY_TEXT_COLOR = '#FFFFFF';
 
 // light colors theme
 const PRIMARY_TEXT_COLOR_LIGHT = '#292941';
-const SECONDARY_TEXT_COLOR_LIGHT = '#292941';
+const SECONDARY_TEXT_COLOR_LIGHT = '#565656';
 const BRAND_TEXT_COLOR_LIGHT = '#008080';
 const PLACEHOLDER_TEXT_COLOR_LIGHT = '#888888';
 const BACKGROUND_COLOR_LIGHT = '#FFFFFF';
@@ -13,7 +13,7 @@ const SECONDARY_SHADOW_COLOR_LIGHT = '#000000';
 
 // dark colors theme
 const PRIMARY_TEXT_COLOR_DARK = '#FFFFFF';
-const SECONDARY_TEXT_COLOR_DARK = '#FFFFFF';
+const SECONDARY_TEXT_COLOR_DARK = '#ededed';
 const BRAND_TEXT_COLOR_DARK = '#008080';
 const PLACEHOLDER_TEXT_COLOR_DARK = '#e1e1e1';
 const BACKGROUND_COLOR_DARK = '#292941';
@@ -65,6 +65,15 @@ export const COLORS = {
         },
       },
     },
+    eventsCard: {
+      divider: '#ededed',
+      counter: {
+        text: PRIMARY_TEXT_COLOR,
+      },
+      imageBox: {
+        border: '#FFFFFF',
+      },
+    },
   },
   dark: {
     common: {
@@ -107,6 +116,15 @@ export const COLORS = {
           content: '#FFFFFFB2',
           background: '#FFFFFF4D',
         },
+      },
+    },
+    eventsCard: {
+      divider: '#EDEDED70',
+      counter: {
+        text: PRIMARY_TEXT_COLOR,
+      },
+      imageBox: {
+        border: '#FFFFFF',
       },
     },
   },

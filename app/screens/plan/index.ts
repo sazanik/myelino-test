@@ -1,2 +1,2 @@
-export { PlanDetailsScreen } from './planDetails';
-export { PlansScreen } from './plans';
+export { PlansScreen } from './planDetails';
+export { PlanDetailsScreen } from './plans';
