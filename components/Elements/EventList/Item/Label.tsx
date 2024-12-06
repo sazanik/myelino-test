@@ -1,49 +1,50 @@
-import { FC, useCallback } from 'react';
-import { StyleProp, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { FC } from 'react';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 
-import { ROUND_BORDER } from '@/constants/style';
+import { ROUND_BORDER } from '@/constants';
 import { useTheme } from '@/hooks';
-import { IOption } from '@/types/components';
-import { CreateStylesFn } from '@/types/styles';
+import { CreateStylesFn } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    height: 40,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
     borderRadius: ROUND_BORDER,
+    paddingHorizontal: 8,
+    flexDirection: 'row',
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    columnGap: 4,
     backgroundColor: colors.eventList.item.label.background,
   },
-  text: {
-    fontSize: 14,
-    lineHeight: 20,
+  title: {
+    fontSize: 12,
+    lineHeight: 16,
     fontWeight: '400',
     fontFamily: 'Roboto',
     color: colors.eventList.item.label.content,
   },
-  icon: {},
+  icon: {
+    width: 12,
+    height: 12,
+    color: colors.eventList.item.label.content,
+  },
 });
 
 interface Props {
-  option: IOption;
-  onPress: (option: IOption) => unknown;
-  selected: boolean;
+  Icon: FC<SvgProps>;
+  title?: string;
   style?: StyleProp<ViewStyle>;
 }
 
-const Label: FC<Props> = ({ option, onPress, selected, style = {} }) => {
+const Label: FC<Props> = ({ Icon, title = null, style = {} }) => {
   const { styles } = useTheme(createStyles);
 
-  const handlePress = useCallback(() => {
-    onPress(option);
-  }, [onPress, option]);
-
   return (
-    <TouchableOpacity onPress={handlePress} style={[styles.container, style]}>
-      <Text style={[styles.title, selected && styles.selectedTitle]}>{option.label}</Text>
-    </TouchableOpacity>
+    <View style={[styles.container, style]}>
+      <Icon style={styles.icon} />
+      {!!title && <Text style={styles.title}>{title}</Text>}
+    </View>
   );
 };
 

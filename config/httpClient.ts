@@ -7,7 +7,7 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 
 const baseURL = 'http://3.29.235.93:8080';
 
-const axiosClient: AxiosInstance = axios.create({
+export const axiosClient: AxiosInstance = axios.create({
   baseURL: `${baseURL}/api/v1`,
   withCredentials: true,
   headers: {
@@ -40,5 +40,3 @@ axiosClient.interceptors.response.use(
   },
   (error: AxiosError) => Promise.reject(error)
 );
-
-export { axiosClient };

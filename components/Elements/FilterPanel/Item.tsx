@@ -7,8 +7,6 @@ import { CreateStylesFn } from '@/types/styles';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {
-    flex: 1,
-    alignSelf: 'flex-start',
     padding: 14,
     borderRadius: 30,
     backgroundColor: colors.common.componentBackground,
@@ -19,7 +17,6 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-
     elevation: 4,
   },
   title: {

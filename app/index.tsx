@@ -13,11 +13,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
 import { CustomInput } from '@/components';
-import { axiosClient } from '@/config/axiosClient';
-import { ROUTE } from '@/constants/routes';
-import { normalizeError } from '@/helpers/normalizeError';
+import { axiosClient } from '@/config';
+import { ROUTE } from '@/constants';
+import { normalizeError } from '@/helpers';
 import { useForm, useTheme, useTypedNavigation } from '@/hooks';
-import { CreateStylesFn } from '@/types/styles';
+import { CreateStylesFn } from '@/types';
 
 import Logo from '../assets/images/logo.png';
 

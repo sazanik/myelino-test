@@ -10,6 +10,7 @@ import Item from './Item';
 const createStyles: CreateStylesFn = () => ({
   container: {
     marginHorizontal: -20,
+    flexGrow: 0,
   },
   content: {
     paddingHorizontal: 20,
@@ -35,6 +36,7 @@ const FilterPanel: FC<Props> = ({ data, selectedItem, onItemPress, style, conten
   return (
     <FlatList
       style={[styles.container, style]}
+      keyExtractor={(item) => item.value}
       contentContainerStyle={[styles.content, contentStyle]}
       horizontal
       data={data}

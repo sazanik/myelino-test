@@ -1,5 +1,5 @@
 // common colors
-const PRIMARY_TEXT_COLOR = '#FFFFFFF';
+const PRIMARY_TEXT_COLOR = '#FFFFFF';
 
 // light colors theme
 const PRIMARY_TEXT_COLOR_LIGHT = '#292941';
@@ -54,7 +54,7 @@ export const COLORS = {
     },
     eventList: {
       item: {
-        title: PRIMARY_TEXT_COLOR,
+        text: PRIMARY_TEXT_COLOR,
         label: {
           content: '#FFFFFFB2',
           background: '#FFFFFF4D',
@@ -96,7 +96,7 @@ export const COLORS = {
     },
     eventList: {
       item: {
-        title: PRIMARY_TEXT_COLOR,
+        text: PRIMARY_TEXT_COLOR,
         label: {
           content: '#FFFFFFB2',
           background: '#FFFFFF4D',
