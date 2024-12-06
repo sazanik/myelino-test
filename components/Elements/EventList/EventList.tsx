@@ -2,14 +2,14 @@ import { FC } from 'react';
 import { FlatList, StyleProp, ViewStyle } from 'react-native';
 
 import { useTheme } from '@/hooks';
-import { CreateStylesFn } from '@/types';
-import { IEvent } from '@/types/components';
+import { CreateStylesFn, IEvent } from '@/types';
 
-import Item from './Item/Item';
+import { Item } from './Item';
 
 const createStyles: CreateStylesFn = () => ({
   container: {
     marginHorizontal: -20,
+    flexGrow: 0,
   },
   content: {
     paddingHorizontal: 20,

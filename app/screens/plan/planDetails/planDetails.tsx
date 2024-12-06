@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { ScrollView, Text, View } from 'react-native';
 
 import { DateGreeting, EventList, FilterPanel, Header, Loader, SearchInput } from '@/components';
 import { QUICK_PLANS, SCREEN_PADDING } from '@/constants';
@@ -9,8 +9,12 @@ import { CreateStylesFn, IEvent, IOption } from '@/types';
 const createStyles: CreateStylesFn = ({ colors, insets }) => ({
   container: {
     flex: 1,
+    backgroundColor: colors.common.screenBackground,
+  },
+  contentContainer: {
     paddingTop: insets.top || SCREEN_PADDING.TOP,
     paddingHorizontal: SCREEN_PADDING.HORIZONTAL,
+    paddingBottom: (insets.top || SCREEN_PADDING.BOTTOM_M) + SCREEN_PADDING.BOTTOM_XL,
     backgroundColor: colors.common.screenBackground,
   },
   header: {
@@ -40,6 +44,11 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
   eventListContent: {
     columnGap: 4,
   },
+  timeline: {
+    marginTop: 40,
+    height: 400,
+    backgroundColor: 'azure',
+  },
 });
 
 const PlansDetailsScreen = () => {
@@ -48,34 +57,56 @@ const PlansDetailsScreen = () => {
 
   const { plansByMonths, loading } = useEventsData();
 
-  console.log(plansByMonths);
-
-  const planFilters = Object.entries(plansByMonths).map(([filterName, plans]) => ({
-    value: filterName,
-    label: filterName === QUICK_PLANS ? filterName : `${filterName.slice(0, 3)} (${plans.length})`,
-  }));
-
-  const [selectedItem, setSelectedItem] = useState<undefined | IOption>();
+  const planFilters = useMemo(
+    () =>
+      Object.entries(plansByMonths).map(([filterName, plans]) => ({
+        value: filterName,
+        label:
+          filterName === QUICK_PLANS ? filterName : `${filterName.slice(0, 3)} (${plans.length})`,
+      })),
+    [plansByMonths]
+  );
 
   const quickPlanEvents = useMemo(
     () => plansByMonths[QUICK_PLANS]?.flatMap((plan) => [...plan.events]),
     [plansByMonths]
   );
 
-  const handleFilterItemPress = useCallback((option: IOption) => {
-    setSelectedItem(option);
-  }, []);
+  const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
+  const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
+
+  const handleFilterItemPress = useCallback(
+    (option: IOption) => {
+      setSelectedFilterItem(option);
+
+      const selectedEvents = plansByMonths[option.value].flatMap((plan) => [...plan.events]);
+
+      setSelectedEvents(selectedEvents);
+    },
+    [plansByMonths]
+  );
 
   const handleEventItemPress = useCallback((event: IEvent) => {
     console.log(event);
   }, []);
+
+  useEffect(() => {
+    if (planFilters) {
+      setSelectedFilterItem(planFilters[0]);
+      setSelectedEvents(quickPlanEvents);
+    }
+  }, [planFilters, quickPlanEvents]);
 
   if (loading) {
     return <Loader />;
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <Header style={styles.header} title="Planner" onBackPress={goBack} />
       <DateGreeting style={styles.dateGreeting} />
       <SearchInput style={styles.searchInput} value="" onChangeText={() => {}} />
@@ -84,16 +115,17 @@ const PlansDetailsScreen = () => {
         contentStyle={styles.filterPanelContent}
         data={planFilters}
         onItemPress={handleFilterItemPress}
-        selectedItem={selectedItem}
+        selectedItem={selectedFilterItem}
       />
       <EventList
         style={styles.eventList}
         contentStyle={styles.eventListContent}
         horizontal
-        data={quickPlanEvents}
+        data={selectedEvents}
         onItemPress={handleEventItemPress}
       />
-    </View>
+      <View style={styles.timeline} />
+    </ScrollView>
   );
 };
 
