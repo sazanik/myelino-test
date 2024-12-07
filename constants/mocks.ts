@@ -43,7 +43,7 @@ export const MOCK_EVENT_4: IEvent = {
 export const MOCK_EVENTS_PLANS: IEventPlan[] = [
   {
     id: '1',
-    title: 'Plan 1',
+    title: 'Weekend',
     events: Array.from({ length: 5 }, (_, index) => ({
       ...MOCK_EVENT,
       dtStart: new Date(MOCK_EVENT.dtStart).setUTCMonth(11, 20 + index),
@@ -53,7 +53,7 @@ export const MOCK_EVENTS_PLANS: IEventPlan[] = [
   },
   {
     id: '2',
-    title: 'Plan 2',
+    title: 'Cafes and Restaurants',
     events: Array.from({ length: 5 }, (_, index) => ({
       ...MOCK_EVENT_2,
       dtStart: new Date(MOCK_EVENT.dtStart).setUTCFullYear(2025, 0),
@@ -63,7 +63,7 @@ export const MOCK_EVENTS_PLANS: IEventPlan[] = [
   },
   {
     id: '3',
-    title: 'Plan 3',
+    title: 'Walk in the parks',
     events: Array.from({ length: 5 }, (_, index) => ({
       ...MOCK_EVENT_3,
       dtStart: new Date(MOCK_EVENT.dtStart).setUTCFullYear(2025, 0),
@@ -73,7 +73,7 @@ export const MOCK_EVENTS_PLANS: IEventPlan[] = [
   },
   {
     id: '4',
-    title: 'Plan 4',
+    title: 'Sightseeing',
     events: Array.from({ length: 5 }, (_, index) => ({
       ...MOCK_EVENT_4,
       dtStart: new Date(MOCK_EVENT.dtStart).setUTCFullYear(2025, 1),

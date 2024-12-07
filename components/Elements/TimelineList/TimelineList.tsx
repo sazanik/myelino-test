@@ -4,6 +4,7 @@ import {
   SectionListData,
   SectionListRenderItem,
   StyleProp,
+  View,
   ViewStyle,
 } from 'react-native';
 
@@ -12,14 +13,36 @@ import TimelineCheckpoint from '@/components/Elements/TimelineCheckpoint';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEventPlan } from '@/types';
 
-const createStyles: CreateStylesFn = () => ({
+const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {},
   contentContainer: {},
+  verticalLine: {
+    position: 'absolute',
+    height: '100%',
+    width: 2,
+    marginLeft: -4,
+    backgroundColor: colors.timelineCheckpoint.divider.vertical,
+  },
+  monthCheckpoint: {
+    zIndex: 2,
+    marginTop: 50,
+    marginLeft: -10,
+  },
+  planCheckpoint: {
+    zIndex: 2,
+    marginTop: 20,
+    marginLeft: -10,
+  },
+  card: {
+    marginLeft: 10,
+    marginTop: 16,
+  },
 });
 
 interface ISectionData {
   title: string;
   data: IEventPlan[];
+  index: number;
 }
 
 interface Props {
@@ -42,16 +65,30 @@ const TimelineList: FC<Props> = ({
   const { styles } = useTheme(createStyles);
 
   const renderItem: SectionListRenderItem<IEventPlan, ISectionData> = useCallback(
-    ({ item }) => <PlanCard title={item.title} plan={item} onItemPress={onEventsCardPress} />,
-    [onEventsCardPress]
+    ({ item, index }) => (
+      <>
+        <TimelineCheckpoint style={styles.planCheckpoint} type="plan" title={`Plan ${index + 1}`} />
+        <PlanCard
+          style={styles.card}
+          title={item.title}
+          plan={item}
+          onItemPress={onEventsCardPress}
+        />
+        <View style={styles.verticalLine} />
+      </>
+    ),
+    [onEventsCardPress, styles.card, styles.planCheckpoint, styles.verticalLine]
   );
 
   const renderSectionHeader = useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
-    ({ section }: { section: SectionListData<IEventPlan, ISectionData> }) => {
-      return <TimelineCheckpoint type="plan" title={section.title} />;
-    },
-    []
+    ({ section }: { section: SectionListData<IEventPlan, ISectionData> }) => (
+      <>
+        {!!section.index && <View style={styles.verticalLine} />}
+        <TimelineCheckpoint style={styles.monthCheckpoint} type="month" title={section.title} />
+      </>
+    ),
+    [styles.monthCheckpoint, styles.verticalLine]
   );
 
   return (
@@ -66,6 +103,7 @@ const TimelineList: FC<Props> = ({
       keyExtractor={(item, idx) => item.id ?? idx.toString()}
       renderItem={renderItem}
       renderSectionHeader={renderSectionHeader}
+      stickySectionHeadersEnabled={false}
     />
   );
 };

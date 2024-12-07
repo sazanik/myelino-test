@@ -52,6 +52,7 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
     marginTop: 16,
   },
   topTimelineCheckpoint: {
+    marginLeft: -10,
     marginTop: 40,
   },
   eventList: {
@@ -82,7 +83,7 @@ const PlansScreen = () => {
           label:
             key === CURRENT_MONTH_OPTION.key
               ? CURRENT_MONTH_OPTION.label
-              : `${MONTHS_MAP[key as unknown as keyof typeof MONTHS_MAP].slice(0, 3)} (${plans.length})`,
+              : `${MONTHS_MAP[key].slice(0, 3)} (${plans.length})`,
         }))
         .sort((a, b) => {
           if (a.key === CURRENT_MONTH_OPTION.key) {
@@ -109,10 +110,13 @@ const PlansScreen = () => {
 
   const timelineSections = useMemo(
     () =>
-      Object.entries(plansByMonths).map(([filterName, plans]) => ({
-        title: filterName,
-        data: plans,
-      })),
+      Object.entries(plansByMonths)
+        .map(([key, plans], index) => ({
+          title: MONTHS_MAP[key],
+          data: plans,
+          index,
+        }))
+        .filter(({ title }) => Boolean(title)),
     [plansByMonths]
   );
 

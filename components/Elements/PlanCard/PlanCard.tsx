@@ -21,16 +21,14 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     paddingHorizontal: 16,
     flexDirection: 'row',
     backgroundColor: colors.common.componentBackground,
-  },
-  shadow: {
     shadowColor: colors.common.shadow.secondary,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 4.65,
-    elevation: 8,
+    elevation: 3,
   },
   leftDivider: {
     width: 1,
@@ -70,7 +68,7 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     color: colors.planCard.counter.text,
   },
   titleSection: {
-    paddingLeft: 20,
+    paddingHorizontal: 18,
     flex: 1,
     justifyContent: 'center',
   },
@@ -86,12 +84,24 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageBox: {
+  imageBoxShadow: {
+    backgroundColor: colors.common.componentBackground,
+    shadowColor: colors.common.shadow.secondary,
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  image: {
     borderWidth: 1,
     borderColor: colors.planCard.imageBox.border,
     width: '100%',
     height: '100%',
     borderRadius: 4,
+    backgroundColor: colors.common.componentBackground,
   },
 });
 
@@ -111,11 +121,11 @@ const PlanCard: FC<Props> = ({ title, plan, onItemPress, style }) => {
 
   const filteredEvents = plan.events
     .filter((event) => Date.now() < Number(event.dtEnd))
-    .sort((e1, e2) => Number(e2.dtEnd) - Number(e1.dtEnd));
+    .sort((event1, event2) => Number(event2.dtEnd) - Number(event1.dtEnd));
 
   return (
     <TouchableOpacity
-      style={[styles.container, styles.shadow, style]}
+      style={[styles.container, style]}
       activeOpacity={TOUCHABLE_OPACITY}
       onPress={handlePress}
     >
@@ -127,7 +137,9 @@ const PlanCard: FC<Props> = ({ title, plan, onItemPress, style }) => {
       </View>
       <View style={styles.leftDivider} />
       <View style={styles.titleSection}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {title}
+        </Text>
       </View>
       <View style={styles.rightDivider} />
       <View style={styles.imagesSection}>
@@ -143,13 +155,10 @@ const PlanCard: FC<Props> = ({ title, plan, onItemPress, style }) => {
                 height: 56 - idx * 8,
                 marginRight: idx ? -24 : 0,
               },
-              idx !== 2 && styles.shadow,
+              idx !== 2 && styles.imageBoxShadow,
             ]}
           >
-            <Image
-              style={styles.imageBox as StyleProp<ImageStyle>}
-              source={{ uri: event.imageUrl }}
-            />
+            <Image style={styles.image as StyleProp<ImageStyle>} source={{ uri: event.imageUrl }} />
           </View>
         ))}
       </View>
