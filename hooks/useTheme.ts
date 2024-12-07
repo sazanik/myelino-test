@@ -1,16 +1,15 @@
 import { useMemo } from 'react';
-import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { COLORS } from '@/constants/colors';
-import { CreateStylesFn } from '@/types/styles';
+import { COLORS } from '@/constants';
+import { useThemeContext } from '@/contexts/useThemeContext';
+import { CreateStylesFn } from '@/types';
 
 export function useTheme(createStyles: CreateStylesFn) {
   const insets = useSafeAreaInsets();
-  const theme = useColorScheme() ?? 'light';
+  const { theme } = useThemeContext();
 
   const colors = COLORS[theme];
-
   const styles = useMemo(() => createStyles({ colors, insets }), [createStyles, colors, insets]);
 
   return { styles, colors };

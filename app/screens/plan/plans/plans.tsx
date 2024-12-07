@@ -13,6 +13,7 @@ import {
   TimelineList,
 } from '@/components';
 import { CURRENT_MONTH_OPTION, MONTHS_MAP, ROUTE, SCREEN_PADDING } from '@/constants';
+import { useThemeContext } from '@/contexts/useThemeContext';
 import { useEventsData, useForm, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn, IEvent, IEventPlan, IOption } from '@/types';
 
@@ -74,6 +75,8 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
 const PlansScreen = () => {
   const { goBack, navigate } = useTypedNavigation();
   const { styles } = useTheme(createStyles);
+
+  const { switchTheme } = useThemeContext();
 
   const { plansByMonths, allSavedEventsPlan, eventsPlans, loading } = useEventsData();
   const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
@@ -170,7 +173,12 @@ const PlansScreen = () => {
   const ListHeaderComponent = useMemo(
     () => (
       <View>
-        <Header style={styles.header} title="Planner" onBackPress={goBack} />
+        <Header
+          style={styles.header}
+          title="Planner"
+          onBackPress={goBack}
+          onSwitchTheme={switchTheme}
+        />
         <DateGreeting style={styles.dateGreeting} />
         <SearchInput
           style={styles.searchInput}
@@ -217,6 +225,7 @@ const PlansScreen = () => {
     [
       styles,
       goBack,
+      switchTheme,
       searchValue,
       handleChangeSearchValue,
       isSearchActive,

@@ -36,6 +36,10 @@ export const COLORS = {
           background: BRAND_GREEN_COLOR_LIGHT,
         },
       },
+      icon: {
+        background: BRAND_GREEN_COLOR_LIGHT,
+        content: PRIMARY_TEXT_COLOR,
+      },
       text: {
         primary: PRIMARY_TEXT_COLOR_LIGHT,
         secondary: SECONDARY_TEXT_COLOR_LIGHT,
@@ -109,6 +113,10 @@ export const COLORS = {
           content: PRIMARY_TEXT_COLOR,
           background: BRAND_GREEN_COLOR_LIGHT,
         },
+      },
+      icon: {
+        background: BRAND_GREEN_COLOR_DARK,
+        content: PRIMARY_TEXT_COLOR,
       },
       text: {
         primary: PRIMARY_TEXT_COLOR_DARK,

@@ -4,7 +4,8 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { ROUTE } from '@/constants/routes';
+import { ROUTE } from '@/constants';
+import { ThemeContextProvider } from '@/contexts';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -30,16 +31,18 @@ const RootLayout = () => {
   }
 
   return (
-    <Stack
-      initialRouteName={ROUTE.root}
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name={ROUTE.root} options={{ headerShown: false }} />
-      <Stack.Screen name={ROUTE.plan.plans} options={{ headerShown: false }} />
-      <Stack.Screen name={ROUTE.plan.details} options={{ headerShown: false }} />
-    </Stack>
+    <ThemeContextProvider>
+      <Stack
+        initialRouteName={ROUTE.root}
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name={ROUTE.root} options={{ headerShown: false }} />
+        <Stack.Screen name={ROUTE.plan.plans} options={{ headerShown: false }} />
+        <Stack.Screen name={ROUTE.plan.details} options={{ headerShown: false }} />
+      </Stack>
+    </ThemeContextProvider>
   );
 };
 
