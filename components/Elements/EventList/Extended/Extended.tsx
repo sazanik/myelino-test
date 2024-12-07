@@ -83,8 +83,8 @@ const Extended: FC<Props> = ({
       style={[styles.container, style]}
       contentContainerStyle={[styles.contentContainer, contentStyle]}
       ListHeaderComponentStyle={listHeaderComponentStyle}
-      showsVerticalScrollIndicator={false}
       ListHeaderComponent={ListHeaderComponent}
+      showsVerticalScrollIndicator={false}
       nestedScrollEnabled
       renderItem={renderEmptyItem}
       sections={sections}

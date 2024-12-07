@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  Alert,
   Image,
   ImageStyle,
   StyleProp,
@@ -13,9 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
 import { CustomInput } from '@/components';
-import { axiosClient } from '@/config';
 import { ROUTE, TOUCHABLE_OPACITY } from '@/constants';
-import { normalizeError } from '@/helpers';
 import { useForm, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn } from '@/types';
 
@@ -59,7 +56,7 @@ const AuthScreen = () => {
   const { top } = useSafeAreaInsets();
   const colorScheme = useColorScheme();
 
-  const { identifier, password, onChange, reset } = useForm({
+  const { identifier, password, onChange } = useForm({
     identifier: '',
     password: '',
   });
@@ -81,24 +78,30 @@ const AuthScreen = () => {
   );
 
   const handleLoginPress = async () => {
-    if ([identifier, password].includes('')) {
-      Alert.alert('Error', 'All fields are required');
-      return;
-    }
+    // They block is commented out to log in because the server was unavailable during development
 
-    try {
-      await axiosClient.post('/auth/sign-in', { identifier, password });
-
-      reset();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: ROUTE.plan.plans }],
-      });
-    } catch (error: unknown) {
-      const errorMessage = normalizeError(error);
-
-      Alert.alert('Error', errorMessage);
-    }
+    // if ([identifier, password].includes('')) {
+    //   Alert.alert('Error', 'All fields are required');
+    //   return;
+    // }
+    //
+    // try {
+    //   await axiosClient.post('/auth/sign-in', { identifier, password });
+    //
+    //   reset();
+    //   navigation.reset({
+    //     index: 0,
+    //     routes: [{ name: ROUTE.plan.plans }],
+    //   });
+    // } catch (error: unknown) {
+    //   const errorMessage = normalizeError(error);
+    //
+    //   Alert.alert('Error', errorMessage);
+    // }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: ROUTE.plan.plans }],
+    });
   };
 
   useEffect(() => {

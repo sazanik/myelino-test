@@ -3,6 +3,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 
 import { EventList, Header } from '@/components';
 import { ROUTE, SCREEN_PADDING } from '@/constants';
+import { useThemeContext } from '@/contexts/useThemeContext';
 import { useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn, IEvent, RouteParams } from '@/types';
 
@@ -17,8 +18,9 @@ type DetailsScreenParams = RouteProp<RouteParams, typeof ROUTE.plan.details>;
 const PlanDetailsScreen = () => {
   const { goBack } = useTypedNavigation();
   const { params } = useRoute<DetailsScreenParams>();
-
   const { styles } = useTheme(createStyles);
+
+  const { switchTheme } = useThemeContext();
 
   const eventsByExpiresDays = useMemo(
     () =>
@@ -45,8 +47,15 @@ const PlanDetailsScreen = () => {
   );
 
   const ListHeaderComponent = useMemo(
-    () => <Header style={styles.header} title={params.plan.title} onBackPress={goBack} />,
-    [goBack, params.plan.title, styles.header]
+    () => (
+      <Header
+        style={styles.header}
+        title={params.plan.title}
+        onBackPress={goBack}
+        onSwitchTheme={switchTheme}
+      />
+    ),
+    [goBack, params.plan.title, styles.header, switchTheme]
   );
 
   const handleEventPress = useCallback((event: IEvent) => {

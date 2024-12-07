@@ -3,9 +3,10 @@ import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 
 import { ArrowBackIcon } from '@/assets/icons';
-import { ROUND_BORDER, TOUCHABLE_OPACITY } from '@/constants/style';
+import { ROUND_BORDER, TOUCHABLE_OPACITY } from '@/constants';
+import { useThemeContext } from '@/contexts/useThemeContext';
 import { useTheme } from '@/hooks';
-import { CreateStylesFn } from '@/types/styles';
+import { CreateStylesFn } from '@/types';
 
 interface Props {
   title: string;
@@ -45,6 +46,8 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 const Header: FC<Props> = ({ title, onBackPress, onSwitchTheme = undefined, style = {} }) => {
   const { styles, colors } = useTheme(createStyles);
 
+  const { theme } = useThemeContext();
+
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity
@@ -61,7 +64,11 @@ const Header: FC<Props> = ({ title, onBackPress, onSwitchTheme = undefined, styl
           activeOpacity={TOUCHABLE_OPACITY}
           onPress={onSwitchTheme}
         >
-          <Ionicons name="moon" size={24} color={colors.common.icon.content} />
+          <Ionicons
+            name={theme === 'dark' ? 'sunny' : 'moon'}
+            size={24}
+            color={colors.common.icon.content}
+          />
         </TouchableOpacity>
       ) : (
         <View style={styles.rightActionMock} />
