@@ -4,7 +4,7 @@ import { FlatList, StyleProp, ViewStyle } from 'react-native';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEvent } from '@/types';
 
-import Item from './Item';
+import Item from '../Item';
 
 const createStyles: CreateStylesFn = () => ({
   container: {
@@ -24,7 +24,7 @@ interface Props {
   contentStyle?: StyleProp<ViewStyle>;
 }
 
-const EventList: FC<Props> = ({
+const Default: FC<Props> = ({
   data,
   onItemPress,
   horizontal = false,
@@ -47,4 +47,4 @@ const EventList: FC<Props> = ({
   );
 };
 
-export default EventList;
+export default Default;

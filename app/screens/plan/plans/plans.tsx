@@ -12,7 +12,7 @@ import {
   TimelineCheckpoint,
   TimelineList,
 } from '@/components';
-import { CURRENT_MONTH_OPTION, MONTHS_MAP, SCREEN_PADDING } from '@/constants';
+import { CURRENT_MONTH_OPTION, MONTHS_MAP, ROUTE, SCREEN_PADDING } from '@/constants';
 import { useEventsData, useForm, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn, IEvent, IEventPlan, IOption } from '@/types';
 
@@ -72,7 +72,7 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
 });
 
 const PlansScreen = () => {
-  const { goBack } = useTypedNavigation();
+  const { goBack, navigate } = useTypedNavigation();
   const { styles } = useTheme(createStyles);
 
   const { plansByMonths, allSavedEventsPlan, eventsPlans, loading } = useEventsData();
@@ -90,6 +90,12 @@ const PlansScreen = () => {
       setIsSearchActive(value.length > 2);
     },
     [onChange]
+  );
+
+  const foundPlans = useMemo(
+    () =>
+      eventsPlans.filter((plan) => plan.title.toLowerCase().includes(searchValue.toLowerCase())),
+    [eventsPlans, searchValue]
   );
 
   const planFilters = useMemo(
@@ -140,14 +146,6 @@ const PlansScreen = () => {
     [plansByMonths]
   );
 
-  const foundPlans = useMemo(
-    () =>
-      eventsPlans.filter((plan) => plan.title.toLowerCase().includes(searchValue.toLowerCase())),
-    [eventsPlans, searchValue]
-  );
-
-  console.log(foundPlans);
-
   const handleFilterItemPress = useCallback(
     (option: IOption) => {
       const selectedEvents = plansByMonths[option.key].flatMap((plan) => [...plan.events]);
@@ -162,9 +160,12 @@ const PlansScreen = () => {
     console.log(event);
   }, []);
 
-  const handlePlanPress = useCallback((plan: IEventPlan) => {
-    console.log(plan);
-  }, []);
+  const handlePlanPress = useCallback(
+    (plan: IEventPlan) => {
+      navigate(ROUTE.plan.details, { plan });
+    },
+    [navigate]
+  );
 
   const ListHeaderComponent = useMemo(
     () => (
@@ -202,7 +203,7 @@ const PlansScreen = () => {
               type="urgent"
               title={topTimelineCheckpointTitle}
             />
-            <EventList
+            <EventList.Default
               style={styles.eventList}
               contentStyle={styles.eventListContent}
               horizontal
@@ -248,7 +249,7 @@ const PlansScreen = () => {
       contentStyle={styles.contentContainer}
       ListHeaderComponent={ListHeaderComponent}
       sections={isSearchActive ? [] : timelineSections}
-      onHandlePlanPress={handlePlanPress}
+      onItemPress={handlePlanPress}
     />
   );
 };

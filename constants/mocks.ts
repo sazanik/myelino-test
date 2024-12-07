@@ -82,8 +82,3 @@ export const MOCK_EVENTS_PLANS: IEventPlan[] = [
     })),
   },
 ];
-
-export const MOCK_EVENTS = MOCK_EVENTS_PLANS.reduce(
-  (acc, plan) => [...acc, ...plan.events],
-  [] as IEvent[]
-);

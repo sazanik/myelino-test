@@ -14,8 +14,6 @@ import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEventPlan } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
-  container: {},
-  contentContainer: {},
   verticalLine: {
     position: 'absolute',
     height: '100%',
@@ -46,9 +44,9 @@ interface ISectionData {
 }
 
 interface Props {
-  ListHeaderComponent: ReactElement;
+  ListHeaderComponent?: ReactElement;
   sections: ISectionData[];
-  onHandlePlanPress: (plan: IEventPlan) => unknown;
+  onItemPress: (item: IEventPlan) => unknown;
   style?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
   listHeaderComponentStyle?: StyleProp<ViewStyle>;
@@ -57,7 +55,7 @@ interface Props {
 const TimelineList: FC<Props> = ({
   ListHeaderComponent,
   sections,
-  onHandlePlanPress,
+  onItemPress,
   style = null,
   contentStyle = null,
   listHeaderComponentStyle = null,
@@ -68,11 +66,11 @@ const TimelineList: FC<Props> = ({
     ({ item, index }) => (
       <>
         <TimelineCheckpoint style={styles.planCheckpoint} type="plan" title={`Plan ${index + 1}`} />
-        <PlanCard style={styles.card} plan={item} onItemPress={onHandlePlanPress} />
+        <PlanCard style={styles.card} plan={item} onItemPress={onItemPress} />
         <View style={styles.verticalLine} />
       </>
     ),
-    [onHandlePlanPress, styles.card, styles.planCheckpoint, styles.verticalLine]
+    [onItemPress, styles.card, styles.planCheckpoint, styles.verticalLine]
   );
 
   const renderSectionHeader = useCallback(
@@ -88,8 +86,8 @@ const TimelineList: FC<Props> = ({
 
   return (
     <SectionList
-      style={[styles.container, style]}
-      contentContainerStyle={[styles.contentContainer, contentStyle]}
+      style={style}
+      contentContainerStyle={contentStyle}
       ListHeaderComponentStyle={listHeaderComponentStyle}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={ListHeaderComponent}
