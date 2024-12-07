@@ -7,10 +7,12 @@ import {
   FilterPanel,
   Header,
   Loader,
+  PlanCard,
   SearchInput,
+  TimelineCheckpoint,
   TimelineList,
 } from '@/components';
-import { QUICK_PLANS, SCREEN_PADDING } from '@/constants';
+import { CURRENT_MONTH_OPTION, MONTHS_MAP, SCREEN_PADDING } from '@/constants';
 import { useEventsData, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn, IEvent, IEventPlan, IOption } from '@/types';
 
@@ -46,8 +48,14 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
     // padding to see top shadow
     paddingVertical: 8,
   },
+  allSavedEventsPlan: {
+    marginTop: 16,
+  },
+  topTimelineCheckpoint: {
+    marginTop: 40,
+  },
   eventList: {
-    marginTop: 10,
+    marginTop: 16,
   },
   eventListContent: {
     columnGap: 4,
@@ -62,21 +70,41 @@ const PlansScreen = () => {
   const { goBack } = useTypedNavigation();
   const { styles } = useTheme(createStyles);
 
-  const { plansByMonths, loading } = useEventsData();
+  const { plansByMonths, allSavedEventsPlan, loading } = useEventsData();
+  const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
+  const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
 
   const planFilters = useMemo(
     () =>
-      Object.entries(plansByMonths).map(([filterName, plans]) => ({
-        value: filterName,
-        label:
-          filterName === QUICK_PLANS ? filterName : `${filterName.slice(0, 3)} (${plans.length})`,
-      })),
+      Object.entries(plansByMonths)
+        .map(([key, plans]) => ({
+          key,
+          label:
+            key === CURRENT_MONTH_OPTION.key
+              ? CURRENT_MONTH_OPTION.label
+              : `${MONTHS_MAP[key as unknown as keyof typeof MONTHS_MAP].slice(0, 3)} (${plans.length})`,
+        }))
+        .sort((a, b) => {
+          if (a.key === CURRENT_MONTH_OPTION.key) {
+            return -1;
+          }
+          if (b.key === CURRENT_MONTH_OPTION.key) {
+            return 1;
+          }
+          return 0;
+        }),
     [plansByMonths]
   );
 
-  const quickPlanEvents = useMemo(
-    () => plansByMonths[QUICK_PLANS]?.flatMap((plan) => [...plan.events]),
+  const currentMonthEvents = useMemo(
+    () => plansByMonths[CURRENT_MONTH_OPTION.key]?.flatMap((plan) => [...plan.events]),
     [plansByMonths]
+  );
+
+  const topTimelineCheckpointTitle = useMemo(
+    () =>
+      `Expires in ${Math.round((Number((selectedEvents ?? [])[0]?.dtEnd ?? Date.now()) - Date.now()) / (1000 * 60 * 60 * 24))} days`,
+    [selectedEvents]
   );
 
   const timelineSections = useMemo(
@@ -88,14 +116,9 @@ const PlansScreen = () => {
     [plansByMonths]
   );
 
-  console.log(timelineSections);
-
-  const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
-  const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
-
   const handleFilterItemPress = useCallback(
     (option: IOption) => {
-      const selectedEvents = plansByMonths[option.value].flatMap((plan) => [...plan.events]);
+      const selectedEvents = plansByMonths[option.key].flatMap((plan) => [...plan.events]);
 
       setSelectedFilterItem(option);
       setSelectedEvents(selectedEvents);
@@ -118,12 +141,27 @@ const PlansScreen = () => {
         <DateGreeting style={styles.dateGreeting} />
         <SearchInput style={styles.searchInput} value="" onChangeText={() => {}} />
         <Text style={styles.title}>Plans</Text>
+
         <FilterPanel
           contentStyle={styles.filterPanelContent}
           data={planFilters}
           onItemPress={handleFilterItemPress}
           selectedItem={selectedFilterItem}
         />
+
+        <PlanCard
+          style={styles.allSavedEventsPlan}
+          title="All events saved"
+          plan={allSavedEventsPlan}
+          onItemPress={handleEventsCardPress}
+        />
+
+        <TimelineCheckpoint
+          style={styles.topTimelineCheckpoint}
+          type="urgent"
+          title={topTimelineCheckpointTitle}
+        />
+
         <EventList
           style={styles.eventList}
           contentStyle={styles.eventListContent}
@@ -134,22 +172,25 @@ const PlansScreen = () => {
       </View>
     ),
     [
+      allSavedEventsPlan,
       goBack,
       handleEventItemPress,
+      handleEventsCardPress,
       handleFilterItemPress,
       planFilters,
       selectedEvents,
       selectedFilterItem,
       styles,
+      topTimelineCheckpointTitle,
     ]
   );
 
   useEffect(() => {
     if (planFilters) {
       setSelectedFilterItem(planFilters[0]);
-      setSelectedEvents(quickPlanEvents);
+      setSelectedEvents(currentMonthEvents);
     }
-  }, [planFilters, quickPlanEvents]);
+  }, [planFilters, currentMonthEvents]);
 
   if (loading) {
     return <Loader />;

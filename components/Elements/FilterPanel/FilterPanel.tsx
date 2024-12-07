@@ -35,13 +35,13 @@ const FilterPanel: FC<Props> = ({
   const { styles } = useTheme(createStyles);
 
   const renderItem = ({ item }: { item: IOption }) => (
-    <Item option={item} onPress={onItemPress} selected={selectedItem?.value === item.value} />
+    <Item option={item} onPress={onItemPress} selected={selectedItem?.key === item.key} />
   );
 
   return (
     <FlatList
       style={[styles.container, style]}
-      keyExtractor={(item) => item.value}
+      keyExtractor={(item) => item.key}
       contentContainerStyle={[styles.content, contentStyle]}
       horizontal
       data={data}

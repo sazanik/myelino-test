@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import {
   Image,
   ImageStyle,
@@ -11,7 +11,7 @@ import {
 
 import { TOUCHABLE_OPACITY } from '@/constants';
 import { useTheme } from '@/hooks';
-import { CreateStylesFn, IEvent } from '@/types';
+import { CreateStylesFn, IEventPlan } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {
@@ -34,12 +34,12 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
   },
   leftDivider: {
     width: 1,
-    backgroundColor: colors.eventsCard.divider,
+    backgroundColor: colors.planCard.divider,
   },
   rightDivider: {
     marginVertical: -12,
     width: 1,
-    backgroundColor: colors.eventsCard.divider,
+    backgroundColor: colors.planCard.divider,
   },
   counterSection: {
     paddingRight: 16,
@@ -67,7 +67,7 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     lineHeight: 24,
     fontWeight: '800',
     fontFamily: 'RobotoBold',
-    color: colors.eventsCard.counter.text,
+    color: colors.planCard.counter.text,
   },
   titleSection: {
     paddingLeft: 20,
@@ -88,7 +88,7 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
   },
   imageBox: {
     borderWidth: 1,
-    borderColor: colors.eventsCard.imageBox.border,
+    borderColor: colors.planCard.imageBox.border,
     width: '100%',
     height: '100%',
     borderRadius: 4,
@@ -97,15 +97,19 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 
 interface Props {
   title: string;
-  events: IEvent[];
-  onItemPress: () => unknown;
+  plan: IEventPlan;
+  onItemPress: (plan: IEventPlan) => unknown;
   style?: StyleProp<ViewStyle>;
 }
 
-const EventsCard: FC<Props> = ({ title, events, onItemPress, style }) => {
+const PlanCard: FC<Props> = ({ title, plan, onItemPress, style }) => {
   const { styles } = useTheme(createStyles);
 
-  const filteredEvents = events
+  const handlePress = useCallback(() => {
+    onItemPress(plan);
+  }, [onItemPress, plan]);
+
+  const filteredEvents = plan.events
     .filter((event) => Date.now() < Number(event.dtEnd))
     .sort((e1, e2) => Number(e2.dtEnd) - Number(e1.dtEnd));
 
@@ -113,7 +117,7 @@ const EventsCard: FC<Props> = ({ title, events, onItemPress, style }) => {
     <TouchableOpacity
       style={[styles.container, styles.shadow, style]}
       activeOpacity={TOUCHABLE_OPACITY}
-      onPress={onItemPress}
+      onPress={handlePress}
     >
       <View style={styles.counterSection}>
         <Text style={styles.counterTitle}>Events</Text>
@@ -153,4 +157,4 @@ const EventsCard: FC<Props> = ({ title, events, onItemPress, style }) => {
   );
 };
 
-export default EventsCard;
+export default PlanCard;

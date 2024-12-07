@@ -67,7 +67,7 @@ export const COLORS = {
         },
       },
     },
-    eventsCard: {
+    planCard: {
       divider: '#ededed',
       counter: {
         text: PRIMARY_TEXT_COLOR,
@@ -141,7 +141,7 @@ export const COLORS = {
         },
       },
     },
-    eventsCard: {
+    planCard: {
       divider: '#EDEDED70',
       counter: {
         text: PRIMARY_TEXT_COLOR,

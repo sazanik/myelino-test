@@ -1,13 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { MOCK_EVENTS, MOCK_EVENTS_PLANS, QUICK_PLANS } from '@/constants';
-import { IEvent, IEventPlan } from '@/types';
-
-const getMonthName = (date: Date | number) =>
-  new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(date));
+import { ALL_SAVED_EVENTS_PLAN_OPTION, CURRENT_MONTH_OPTION, MOCK_EVENTS_PLANS } from '@/constants';
+import { IEventPlan } from '@/types';
 
 export const useEventsData = () => {
-  const [events, setEvents] = useState<IEvent[]>([]);
   const [eventsPlans, setEventsPlans] = useState<IEventPlan[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,13 +24,14 @@ export const useEventsData = () => {
           const planMonth = new Date(filteredPlan.events[0].dtStart).getMonth();
 
           if (currentMonth === planMonth) {
-            acc[QUICK_PLANS] = acc[QUICK_PLANS] ? [...acc[QUICK_PLANS], plan] : [plan];
+            acc[CURRENT_MONTH_OPTION.key] = acc[CURRENT_MONTH_OPTION.key]
+              ? [...acc[CURRENT_MONTH_OPTION.key], plan]
+              : [plan];
 
             return acc;
           }
 
-          const monthName = getMonthName(filteredPlan.events[0].dtStart);
-          acc[monthName] = acc[monthName] ? [...acc[monthName], plan] : [plan];
+          acc[planMonth] = acc[planMonth] ? [...acc[planMonth], plan] : [plan];
 
           return acc;
         },
@@ -43,10 +40,26 @@ export const useEventsData = () => {
     [eventsPlans]
   );
 
+  const allSavedEventsPlan: IEventPlan = useMemo(
+    () =>
+      eventsPlans.reduce(
+        (acc, plan) => {
+          acc.events = [...acc.events, ...plan.events];
+
+          return acc;
+        },
+        {
+          id: ALL_SAVED_EVENTS_PLAN_OPTION.key,
+          title: ALL_SAVED_EVENTS_PLAN_OPTION.label,
+          events: [],
+        }
+      ),
+    [eventsPlans]
+  );
+
   const fetchData = () => {
     setTimeout(() => {
       setEventsPlans(MOCK_EVENTS_PLANS);
-      setEvents(MOCK_EVENTS);
       setLoading(false);
     }, 1000);
   };
@@ -59,5 +72,5 @@ export const useEventsData = () => {
     };
   }, []);
 
-  return { events, eventsPlans, plansByMonths, loading };
+  return { allSavedEventsPlan, eventsPlans, plansByMonths, loading };
 };

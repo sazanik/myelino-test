@@ -7,7 +7,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { EventsCard, TimelineCheckpoint } from '@/components';
+import PlanCard from '@/components/Elements/PlanCard';
+import TimelineCheckpoint from '@/components/Elements/TimelineCheckpoint';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEventPlan } from '@/types';
 
@@ -40,22 +41,9 @@ const TimelineList: FC<Props> = ({
 }) => {
   const { styles } = useTheme(createStyles);
 
-  const handleItemPress = useCallback(
-    (plan: IEventPlan) => {
-      onEventsCardPress(plan);
-    },
-    [onEventsCardPress]
-  );
-
   const renderItem: SectionListRenderItem<IEventPlan, ISectionData> = useCallback(
-    ({ item }) => (
-      <EventsCard
-        title={item.title}
-        events={item.events}
-        onItemPress={() => handleItemPress(item)}
-      />
-    ),
-    [handleItemPress]
+    ({ item }) => <PlanCard title={item.title} plan={item} onItemPress={onEventsCardPress} />,
+    [onEventsCardPress]
   );
 
   const renderSectionHeader = useCallback(
