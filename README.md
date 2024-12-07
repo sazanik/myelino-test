@@ -9,7 +9,7 @@ The project is built in a conveniently scalable structure
 - Anywhere is used constants like colors, routes, etc.
 - The optimal folder (with index.ts in each one) structure pattern has been chosen to avoid cluttering the imports
 - Added the typed navigation hook, now there is no need to specify `as never` in navigation methods
-- The input displays were configured additionally brought to the same view because lineHeight is not applied on android, causing the same styles to look different on devices
+- The display of the inputs were configured additionally brought to the same view because lineHeight is not applied on android, causing the same styles to look different on devices
 - ContextAPI is selected as the global state control. As an example, a theme switch independent of the device theme is implemented
 - Fully working dark theme
 - As for the logic, I tried to use my observation experience and skills and implemented the most convenient version of the logic where it was not quite obvious from the user's point of view
@@ -23,6 +23,8 @@ to add an internationalization-framework such as `i18n` and a library for data f
 Enjoy using it!
 
 ---
+
+## Instructions
 
 This repository contains the base project for the Myelino technical test in React Native. Follow the instructions below to clone the project, install dependencies, initialize the project, and review the pre-installed packages.
 
