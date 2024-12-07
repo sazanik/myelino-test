@@ -41,11 +41,11 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 
 interface Props {
   value: string;
-  onChangeText?: (text: string) => void;
+  onChangeText: (text: string) => void;
   style?: StyleProp<ViewStyle>;
 }
 
-const SearchInput: FC<Props> = ({ value, onChangeText = () => {}, style = {} }) => {
+const SearchInput: FC<Props> = ({ value, onChangeText, style = {} }) => {
   const { styles, colors } = useTheme(createStyles);
 
   return (

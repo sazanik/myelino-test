@@ -106,13 +106,12 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 });
 
 interface Props {
-  title: string;
   plan: IEventPlan;
   onItemPress: (plan: IEventPlan) => unknown;
   style?: StyleProp<ViewStyle>;
 }
 
-const PlanCard: FC<Props> = ({ title, plan, onItemPress, style }) => {
+const PlanCard: FC<Props> = ({ plan, onItemPress, style }) => {
   const { styles } = useTheme(createStyles);
 
   const handlePress = useCallback(() => {
@@ -138,7 +137,7 @@ const PlanCard: FC<Props> = ({ title, plan, onItemPress, style }) => {
       <View style={styles.leftDivider} />
       <View style={styles.titleSection}>
         <Text style={styles.title} numberOfLines={2}>
-          {title}
+          {plan.title}
         </Text>
       </View>
       <View style={styles.rightDivider} />

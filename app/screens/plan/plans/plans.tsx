@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import {
@@ -13,7 +13,7 @@ import {
   TimelineList,
 } from '@/components';
 import { CURRENT_MONTH_OPTION, MONTHS_MAP, SCREEN_PADDING } from '@/constants';
-import { useEventsData, useTheme, useTypedNavigation } from '@/hooks';
+import { useEventsData, useForm, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn, IEvent, IEventPlan, IOption } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors, insets }) => ({
@@ -35,6 +35,10 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
   },
   searchInput: {
     marginTop: 16,
+  },
+  foundPlans: {
+    marginTop: 20,
+    rowGap: 20,
   },
   title: {
     marginTop: 20,
@@ -71,9 +75,22 @@ const PlansScreen = () => {
   const { goBack } = useTypedNavigation();
   const { styles } = useTheme(createStyles);
 
-  const { plansByMonths, allSavedEventsPlan, loading } = useEventsData();
+  const { plansByMonths, allSavedEventsPlan, eventsPlans, loading } = useEventsData();
   const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
   const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+
+  const { searchValue, onChange } = useForm({
+    searchValue: '',
+  });
+
+  const handleChangeSearchValue = useCallback(
+    (value: string) => {
+      onChange(value, 'searchValue');
+      setIsSearchActive(value.length > 2);
+    },
+    [onChange]
+  );
 
   const planFilters = useMemo(
     () =>
@@ -104,7 +121,10 @@ const PlansScreen = () => {
 
   const topTimelineCheckpointTitle = useMemo(
     () =>
-      `Expires in ${Math.round((Number((selectedEvents ?? [])[0]?.dtEnd ?? Date.now()) - Date.now()) / (1000 * 60 * 60 * 24))} days`,
+      `Expires in ${Math.round(
+        (Number((selectedEvents ?? [])[0]?.dtEnd ?? Date.now()) - Date.now()) /
+          (1000 * 60 * 60 * 24)
+      )} days`,
     [selectedEvents]
   );
 
@@ -120,6 +140,14 @@ const PlansScreen = () => {
     [plansByMonths]
   );
 
+  const foundPlans = useMemo(
+    () =>
+      eventsPlans.filter((plan) => plan.title.toLowerCase().includes(searchValue.toLowerCase())),
+    [eventsPlans, searchValue]
+  );
+
+  console.log(foundPlans);
+
   const handleFilterItemPress = useCallback(
     (option: IOption) => {
       const selectedEvents = plansByMonths[option.key].flatMap((plan) => [...plan.events]);
@@ -134,58 +162,72 @@ const PlansScreen = () => {
     console.log(event);
   }, []);
 
-  const handleEventsCardPress = useCallback((plan: IEventPlan) => {
+  const handlePlanPress = useCallback((plan: IEventPlan) => {
     console.log(plan);
   }, []);
 
-  const renderListHeaderComponent = useCallback(
+  const ListHeaderComponent = useMemo(
     () => (
       <View>
         <Header style={styles.header} title="Planner" onBackPress={goBack} />
         <DateGreeting style={styles.dateGreeting} />
-        <SearchInput style={styles.searchInput} value="" onChangeText={() => {}} />
+        <SearchInput
+          style={styles.searchInput}
+          value={searchValue}
+          onChangeText={handleChangeSearchValue}
+        />
         <Text style={styles.title}>Plans</Text>
 
-        <FilterPanel
-          contentStyle={styles.filterPanelContent}
-          data={planFilters}
-          onItemPress={handleFilterItemPress}
-          selectedItem={selectedFilterItem}
-        />
-
-        <PlanCard
-          style={styles.allSavedEventsPlan}
-          title="All events saved"
-          plan={allSavedEventsPlan}
-          onItemPress={handleEventsCardPress}
-        />
-
-        <TimelineCheckpoint
-          style={styles.topTimelineCheckpoint}
-          type="urgent"
-          title={topTimelineCheckpointTitle}
-        />
-
-        <EventList
-          style={styles.eventList}
-          contentStyle={styles.eventListContent}
-          horizontal
-          data={selectedEvents}
-          onItemPress={handleEventItemPress}
-        />
+        {isSearchActive ? (
+          <View style={styles.foundPlans}>
+            {foundPlans.map((plan) => (
+              <PlanCard key={plan.title} plan={plan} onItemPress={handlePlanPress} />
+            ))}
+          </View>
+        ) : (
+          <>
+            <FilterPanel
+              contentStyle={styles.filterPanelContent}
+              data={planFilters}
+              onItemPress={handleFilterItemPress}
+              selectedItem={selectedFilterItem}
+            />
+            <PlanCard
+              style={styles.allSavedEventsPlan}
+              plan={allSavedEventsPlan}
+              onItemPress={handlePlanPress}
+            />
+            <TimelineCheckpoint
+              style={styles.topTimelineCheckpoint}
+              type="urgent"
+              title={topTimelineCheckpointTitle}
+            />
+            <EventList
+              style={styles.eventList}
+              contentStyle={styles.eventListContent}
+              horizontal
+              data={selectedEvents}
+              onItemPress={handleEventItemPress}
+            />
+          </>
+        )}
       </View>
     ),
     [
-      allSavedEventsPlan,
-      goBack,
-      handleEventItemPress,
-      handleEventsCardPress,
-      handleFilterItemPress,
-      planFilters,
-      selectedEvents,
-      selectedFilterItem,
       styles,
+      goBack,
+      searchValue,
+      handleChangeSearchValue,
+      isSearchActive,
+      foundPlans,
+      planFilters,
+      handleFilterItemPress,
+      selectedFilterItem,
+      allSavedEventsPlan,
+      handlePlanPress,
       topTimelineCheckpointTitle,
+      selectedEvents,
+      handleEventItemPress,
     ]
   );
 
@@ -204,9 +246,9 @@ const PlansScreen = () => {
     <TimelineList
       style={styles.container}
       contentStyle={styles.contentContainer}
-      ListHeaderComponent={renderListHeaderComponent}
-      sections={timelineSections}
-      onEventsCardPress={handleEventsCardPress}
+      ListHeaderComponent={ListHeaderComponent}
+      sections={isSearchActive ? [] : timelineSections}
+      onHandlePlanPress={handlePlanPress}
     />
   );
 };

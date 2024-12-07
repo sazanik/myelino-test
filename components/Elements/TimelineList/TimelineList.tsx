@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, ReactElement, useCallback } from 'react';
 import {
   SectionList,
   SectionListData,
@@ -46,9 +46,9 @@ interface ISectionData {
 }
 
 interface Props {
-  ListHeaderComponent: FC;
+  ListHeaderComponent: ReactElement;
   sections: ISectionData[];
-  onEventsCardPress: (item: IEventPlan) => unknown;
+  onHandlePlanPress: (plan: IEventPlan) => unknown;
   style?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
   listHeaderComponentStyle?: StyleProp<ViewStyle>;
@@ -57,7 +57,7 @@ interface Props {
 const TimelineList: FC<Props> = ({
   ListHeaderComponent,
   sections,
-  onEventsCardPress,
+  onHandlePlanPress,
   style = null,
   contentStyle = null,
   listHeaderComponentStyle = null,
@@ -68,16 +68,11 @@ const TimelineList: FC<Props> = ({
     ({ item, index }) => (
       <>
         <TimelineCheckpoint style={styles.planCheckpoint} type="plan" title={`Plan ${index + 1}`} />
-        <PlanCard
-          style={styles.card}
-          title={item.title}
-          plan={item}
-          onItemPress={onEventsCardPress}
-        />
+        <PlanCard style={styles.card} plan={item} onItemPress={onHandlePlanPress} />
         <View style={styles.verticalLine} />
       </>
     ),
-    [onEventsCardPress, styles.card, styles.planCheckpoint, styles.verticalLine]
+    [onHandlePlanPress, styles.card, styles.planCheckpoint, styles.verticalLine]
   );
 
   const renderSectionHeader = useCallback(
