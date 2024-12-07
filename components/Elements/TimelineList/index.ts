@@ -1,1 +1,1 @@
-export { default as TimelineList } from './TimelineList';
+export { default } from './TimelineList';

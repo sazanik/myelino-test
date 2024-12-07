@@ -4,7 +4,7 @@ import { FlatList, StyleProp, ViewStyle } from 'react-native';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEvent } from '@/types';
 
-import { Item } from './Item';
+import Item from './Item';
 
 const createStyles: CreateStylesFn = () => ({
   container: {

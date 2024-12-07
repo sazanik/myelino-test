@@ -1,6 +1,7 @@
-export { default as DateGreeting } from './DateGreeting';
-export { EventList } from './EventList';
-export { EventsCard } from './EventsCard';
-export { FilterPanel } from './FilterPanel';
+export { default as DateGreeting } from './DateGreeting/DateGreeting';
+export { default as EventList } from './EventList';
+export { default as EventsCard } from './EventsCard';
+export { default as FilterPanel } from './FilterPanel';
 export { default as Loader } from './Loader';
-export { TimelineList } from './TimelineList';
+export { default as TimelineCheckpoint } from './TimelineCheckpoint';
+export { default as TimelineList } from './TimelineList';

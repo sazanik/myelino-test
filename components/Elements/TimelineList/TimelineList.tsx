@@ -4,12 +4,10 @@ import {
   SectionListData,
   SectionListRenderItem,
   StyleProp,
-  Text,
-  View,
   ViewStyle,
 } from 'react-native';
 
-import { EventsCard } from '@/components/Elements/EventsCard';
+import { EventsCard, TimelineCheckpoint } from '@/components';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEventPlan } from '@/types';
 
@@ -63,11 +61,7 @@ const TimelineList: FC<Props> = ({
   const renderSectionHeader = useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
     ({ section }: { section: SectionListData<IEventPlan, ISectionData> }) => {
-      return (
-        <View>
-          <Text>{section.title}</Text>
-        </View>
-      );
+      return <TimelineCheckpoint type="plan" title={section.title} />;
     },
     []
   );

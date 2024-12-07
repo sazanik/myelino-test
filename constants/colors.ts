@@ -10,6 +10,7 @@ const BACKGROUND_COLOR_LIGHT = '#FFFFFF';
 const BRAND_GREEN_COLOR_LIGHT = '#008080';
 const PRIMARY_SHADOW_COLOR_LIGHT = '#209090';
 const SECONDARY_SHADOW_COLOR_LIGHT = '#000000';
+const RED_COLOR_LIGHT = '#C8102E';
 
 // dark colors theme
 const PRIMARY_TEXT_COLOR_DARK = '#FFFFFF';
@@ -20,6 +21,7 @@ const BACKGROUND_COLOR_DARK = '#292941';
 const BRAND_GREEN_COLOR_DARK = '#008080';
 const PRIMARY_SHADOW_COLOR_DARK = '#209090';
 const SECONDARY_SHADOW_COLOR_DARK = '#FFFFFF';
+const RED_COLOR_DARK = '#C8102E';
 
 export const COLORS = {
   light: {
@@ -74,6 +76,27 @@ export const COLORS = {
         border: '#FFFFFF',
       },
     },
+    timelineCheckpoint: {
+      urgent: {
+        text: RED_COLOR_LIGHT,
+        background: RED_COLOR_LIGHT,
+        border: '#808080',
+      },
+      plan: {
+        text: BRAND_TEXT_COLOR_LIGHT,
+        background: BRAND_TEXT_COLOR_LIGHT,
+        border: '#808080',
+      },
+      month: {
+        text: PRIMARY_TEXT_COLOR_LIGHT,
+        background: PRIMARY_TEXT_COLOR_LIGHT,
+        border: '#808080',
+      },
+      divider: {
+        horizontal: '#808080',
+        vertical: '#8080812E',
+      },
+    },
   },
   dark: {
     common: {
@@ -125,6 +148,27 @@ export const COLORS = {
       },
       imageBox: {
         border: '#FFFFFF',
+      },
+    },
+    timelineCheckpoint: {
+      urgent: {
+        text: RED_COLOR_DARK,
+        background: RED_COLOR_DARK,
+        border: '#808080',
+      },
+      plan: {
+        text: BRAND_TEXT_COLOR_DARK,
+        background: BRAND_TEXT_COLOR_DARK,
+        border: '#808080',
+      },
+      month: {
+        text: PRIMARY_TEXT_COLOR_DARK,
+        background: PRIMARY_TEXT_COLOR_DARK,
+        border: '#808080',
+      },
+      divider: {
+        horizontal: '#808080',
+        vertical: '#8080812E',
       },
     },
   },

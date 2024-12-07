@@ -7,8 +7,9 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:ts": "tsc --noEmit --incremental",
+    "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "eslint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "jest": {
     "preset": "jest-expo"
