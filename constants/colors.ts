@@ -26,6 +26,9 @@ const RED_COLOR_DARK = '#C8102E';
 export const COLORS = {
   light: {
     common: {
+      modal: {
+        overlay: 'rgba(0,0,0,0.5)',
+      },
       shadow: {
         primary: PRIMARY_SHADOW_COLOR_LIGHT,
         secondary: SECONDARY_SHADOW_COLOR_LIGHT,
@@ -104,6 +107,9 @@ export const COLORS = {
   },
   dark: {
     common: {
+      modal: {
+        overlay: 'rgba(0,0,0,0.5)',
+      },
       shadow: {
         primary: PRIMARY_SHADOW_COLOR_DARK,
         secondary: SECONDARY_SHADOW_COLOR_DARK,

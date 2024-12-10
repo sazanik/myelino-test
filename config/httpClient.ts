@@ -2,10 +2,6 @@ import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-// export interface CustomHeaders extends HeadersDefaults {
-//   Authorization?: string | null;
-// }
-
 const baseURL = `http://${Platform.select({ ios: 'localhost', android: '10.0.2.2' })}:3000`;
 
 const httpClient: AxiosInstance = axios.create({
@@ -33,9 +29,7 @@ httpClient.interceptors.request.use(
 
 httpClient.interceptors.response.use(
   async (response) => {
-    console.log('RESPONSE', response.headers);
-
-    // TODO
+    // add handlers if necessary
 
     return response;
   },

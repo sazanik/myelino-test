@@ -7,6 +7,7 @@ import {
   FilterPanel,
   Header,
   Loader,
+  Modal,
   PlanCard,
   SearchInput,
   TimelineCheckpoint,
@@ -74,15 +75,17 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
 });
 
 const PlansScreen = () => {
-  const { goBack, navigate } = useTypedNavigation();
+  const { navigate } = useTypedNavigation();
   const { styles } = useTheme(createStyles);
 
   const { switchTheme } = useThemeContext();
 
   const { plansByMonths, allSavedEventsPlan, eventsPlans, loading } = useEventsData();
+
   const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
   const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [menuModalVisibility, setMenuModalVisibility] = useState(false);
 
   const { searchValue, onChange } = useForm({
     searchValue: '',
@@ -173,12 +176,13 @@ const PlansScreen = () => {
 
   const ListHeaderComponent = useMemo(
     () => (
-      <View>
+      <>
+        <Modal.Children visible={menuModalVisibility} setVisibility={setMenuModalVisibility} />
         <Header
           style={styles.header}
           title="Planner"
-          onBackPress={goBack}
           onSwitchTheme={switchTheme}
+          onMenuPress={() => setMenuModalVisibility(true)}
         />
         <DateGreeting style={styles.dateGreeting} />
         <SearchInput
@@ -221,11 +225,11 @@ const PlansScreen = () => {
             />
           </>
         )}
-      </View>
+      </>
     ),
     [
+      menuModalVisibility,
       styles,
-      goBack,
       switchTheme,
       searchValue,
       handleChangeSearchValue,

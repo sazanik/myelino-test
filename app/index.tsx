@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   Alert,
   Image,
@@ -16,8 +16,10 @@ import asyncStorage from '@react-native-async-storage/async-storage/src/AsyncSto
 import { CustomInput } from '@/components';
 import { http } from '@/config';
 import { ROUTE, TOUCHABLE_OPACITY } from '@/constants';
+import { useUserContext } from '@/contexts/useUserContext';
 import { normalizeError } from '@/helpers';
 import { useForm, useTheme, useTypedNavigation } from '@/hooks';
+import { verifyToken } from '@/services';
 import { CreateStylesFn } from '@/types';
 
 import Logo from '../assets/images/logo.png';
@@ -54,11 +56,12 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 
 const AuthScreen = () => {
   const { styles } = useTheme(createStyles);
+  const { top } = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
 
   const navigation = useTypedNavigation();
 
-  const { top } = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
+  const { setUser } = useUserContext();
 
   const { identifier, password, onChange, reset } = useForm({
     identifier: 'username',
@@ -80,8 +83,6 @@ const AuthScreen = () => {
   );
 
   const handleLoginPress = async () => {
-    // They block is commented out to log in because the server was unavailable during development
-
     if ([identifier, password].includes('')) {
       Alert.alert('Error', 'All fields are required');
       return;
@@ -110,11 +111,28 @@ const AuthScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (isLogged) {
-  //     setTimeout(() => navigation.navigate(ROUTE.plan.plans), 0);
-  //   }
-  // }, [isLogged, navigation]);
+  const checkToken = useCallback(async () => {
+    const token = await asyncStorage.getItem('token');
+
+    if (!token) {
+      return;
+    }
+
+    const user = await verifyToken(token);
+
+    setUser(user);
+
+    if (user) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: ROUTE.plan.plans }],
+      });
+    }
+  }, [navigation, setUser]);
+
+  useEffect(() => {
+    checkToken();
+  }, [checkToken]);
 
   return (
     <>

@@ -10,8 +10,9 @@ import { CreateStylesFn } from '@/types';
 
 interface Props {
   title: string;
-  onBackPress: () => unknown;
+  onBackPress?: () => unknown;
   onSwitchTheme?: () => unknown;
+  onMenuPress?: () => unknown;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -22,13 +23,20 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  leftActions: {
+    width: 84,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    columnGap: 4,
+  },
   action: {
-    width: 46,
-    height: 46,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.header.backButton.background,
-    padding: 8,
+    padding: 4,
     borderRadius: ROUND_BORDER,
   },
   title: {
@@ -37,42 +45,70 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
     fontWeight: '600',
     color: colors.common.text.primary,
   },
+  rightActions: {
+    width: 84,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    columnGap: 4,
+  },
   actionMock: {
-    width: 46,
-    height: 46,
+    width: 40,
+    height: 40,
   },
 });
 
-const Header: FC<Props> = ({ title, onBackPress, onSwitchTheme = undefined, style = {} }) => {
+const Header: FC<Props> = ({
+  title,
+  onBackPress = undefined,
+  onSwitchTheme = undefined,
+  onMenuPress = undefined,
+  style = undefined,
+}) => {
   const { styles, colors } = useTheme(createStyles);
 
   const { theme } = useThemeContext();
 
   return (
     <View style={[styles.container, style]}>
-      <TouchableOpacity
-        style={styles.action}
-        activeOpacity={TOUCHABLE_OPACITY}
-        onPress={onBackPress}
-      >
-        <ArrowBackIcon />
-      </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
-      {onSwitchTheme ? (
-        <TouchableOpacity
-          style={styles.action}
-          activeOpacity={TOUCHABLE_OPACITY}
-          onPress={onSwitchTheme}
-        >
-          <Ionicons
-            name={theme === 'dark' ? 'sunny' : 'moon'}
-            size={24}
-            color={colors.common.icon.content}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.rightActionMock} />
-      )}
+      <View style={styles.leftActions}>
+        {!!onBackPress && (
+          <TouchableOpacity
+            style={styles.action}
+            activeOpacity={TOUCHABLE_OPACITY}
+            onPress={onBackPress}
+          >
+            <ArrowBackIcon />
+          </TouchableOpacity>
+        )}
+      </View>
+      <Text style={styles.title} numberOfLines={1}>
+        {title}
+      </Text>
+      <View style={styles.rightActions}>
+        {onSwitchTheme && (
+          <TouchableOpacity
+            style={styles.action}
+            activeOpacity={TOUCHABLE_OPACITY}
+            onPress={onSwitchTheme}
+          >
+            <Ionicons
+              name={theme === 'dark' ? 'sunny' : 'moon'}
+              size={24}
+              color={colors.common.icon.content}
+            />
+          </TouchableOpacity>
+        )}
+        {!!onMenuPress && (
+          <TouchableOpacity
+            style={styles.action}
+            activeOpacity={TOUCHABLE_OPACITY}
+            onPress={onMenuPress}
+          >
+            <Ionicons name="menu" size={24} color={colors.common.icon.content} />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
