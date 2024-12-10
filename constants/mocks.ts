@@ -1,4 +1,4 @@
-import { IEvent, IEventPlan } from '@/types/components';
+import { IEvent, IPlan } from '@/types/components';
 
 export const MOCK_EVENT: IEvent = {
   title: 'Coffee break',
@@ -40,7 +40,7 @@ export const MOCK_EVENT_4: IEvent = {
     'https://images.unsplash.com/photo-1500217052183-bc01eee1a74e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmFyfGVufDB8fDB8fHww',
 };
 
-export const MOCK_EVENTS_PLANS: IEventPlan[] = [
+export const MOCK_EVENTS_PLANS: IPlan[] = [
   {
     id: '1',
     title: 'Weekend',

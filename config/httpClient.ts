@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
@@ -5,23 +6,24 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 //   Authorization?: string | null;
 // }
 
-const baseURL = 'http://3.29.235.93:8080';
+const baseURL = `http://${Platform.select({ ios: 'localhost', android: '10.0.2.2' })}:3000`;
 
-export const axiosClient: AxiosInstance = axios.create({
-  baseURL: `${baseURL}/api/v1`,
+const httpClient: AxiosInstance = axios.create({
+  baseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-axiosClient.interceptors.request.use(
+httpClient.interceptors.request.use(
   async (config) => {
     const newConfig = config;
 
-    const cookies = await AsyncStorage.getItem('cookies');
-    if (cookies) {
-      newConfig.headers.Cookie = cookies;
+    const token = await AsyncStorage.getItem('token');
+
+    if (token) {
+      newConfig.headers.authorization = `Bearer ${token}`;
     }
 
     return newConfig;
@@ -29,14 +31,15 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-axiosClient.interceptors.response.use(
+httpClient.interceptors.response.use(
   async (response) => {
-    const setCookieHeader = response.headers['set-cookie'];
-    if (setCookieHeader) {
-      const cookies = setCookieHeader.map((cookie) => cookie.split(';')[0]).join('; ');
-      await AsyncStorage.setItem('cookies', cookies);
-    }
+    console.log('RESPONSE', response.headers);
+
+    // TODO
+
     return response;
   },
   (error: AxiosError) => Promise.reject(error)
 );
+
+export default httpClient;

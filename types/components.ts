@@ -15,7 +15,7 @@ export interface IEvent {
   location?: string;
 }
 
-export interface IEventPlan {
+export interface IPlan {
   id?: string;
   title: string;
   events: IEvent[];

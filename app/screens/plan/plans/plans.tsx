@@ -15,7 +15,8 @@ import {
 import { CURRENT_MONTH_OPTION, MONTHS_MAP, ROUTE, SCREEN_PADDING } from '@/constants';
 import { useThemeContext } from '@/contexts/useThemeContext';
 import { useEventsData, useForm, useTheme, useTypedNavigation } from '@/hooks';
-import { CreateStylesFn, IEvent, IEventPlan, IOption } from '@/types';
+import { getPlans } from '@/services';
+import { CreateStylesFn, IEvent, IOption, IPlan } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors, insets }) => ({
   container: {
@@ -164,7 +165,7 @@ const PlansScreen = () => {
   }, []);
 
   const handlePlanPress = useCallback(
-    (plan: IEventPlan) => {
+    (plan: IPlan) => {
       navigate(ROUTE.plan.details, { plan });
     },
     [navigate]
@@ -247,6 +248,10 @@ const PlansScreen = () => {
       setSelectedEvents(currentMonthEvents);
     }
   }, [planFilters, currentMonthEvents]);
+
+  useEffect(() => {
+    getPlans({ userId: '1' }).then(console.log);
+  }, []);
 
   if (loading) {
     return <Loader />;

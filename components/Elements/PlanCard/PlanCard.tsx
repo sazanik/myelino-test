@@ -11,7 +11,7 @@ import {
 
 import { TOUCHABLE_OPACITY } from '@/constants';
 import { useTheme } from '@/hooks';
-import { CreateStylesFn, IEventPlan } from '@/types';
+import { CreateStylesFn, IPlan } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   container: {
@@ -106,8 +106,8 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 });
 
 interface Props {
-  plan: IEventPlan;
-  onItemPress: (plan: IEventPlan) => unknown;
+  plan: IPlan;
+  onItemPress: (plan: IPlan) => unknown;
   style?: StyleProp<ViewStyle>;
 }
 

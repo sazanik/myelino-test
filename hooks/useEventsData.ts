@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { ALL_SAVED_EVENTS_PLAN_OPTION, CURRENT_MONTH_OPTION, MOCK_EVENTS_PLANS } from '@/constants';
-import { IEventPlan } from '@/types';
+import { IPlan } from '@/types';
 
 export const useEventsData = () => {
-  const [eventsPlans, setEventsPlans] = useState<IEventPlan[]>([]);
+  const [eventsPlans, setEventsPlans] = useState<IPlan[]>([]);
   const [loading, setLoading] = useState(true);
 
   const plansByMonths = useMemo(
@@ -35,12 +35,12 @@ export const useEventsData = () => {
 
           return acc;
         },
-        {} as Record<string, IEventPlan[]>
+        {} as Record<string, IPlan[]>
       ),
     [eventsPlans]
   );
 
-  const allSavedEventsPlan: IEventPlan = useMemo(
+  const allSavedEventsPlan: IPlan = useMemo(
     () =>
       eventsPlans.reduce(
         (acc, plan) => {

@@ -11,7 +11,7 @@ import {
 import PlanCard from '@/components/Elements/PlanCard';
 import TimelineCheckpoint from '@/components/Elements/TimelineCheckpoint';
 import { useTheme } from '@/hooks';
-import { CreateStylesFn, IEventPlan } from '@/types';
+import { CreateStylesFn, IPlan } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors }) => ({
   verticalLine: {
@@ -39,14 +39,14 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 
 interface ISectionData {
   title: string;
-  data: IEventPlan[];
+  data: IPlan[];
   index: number;
 }
 
 interface Props {
   ListHeaderComponent?: ReactElement;
   sections: ISectionData[];
-  onItemPress: (item: IEventPlan) => unknown;
+  onItemPress: (item: IPlan) => unknown;
   style?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
   listHeaderComponentStyle?: StyleProp<ViewStyle>;
@@ -62,7 +62,7 @@ const TimelineList: FC<Props> = ({
 }) => {
   const { styles } = useTheme(createStyles);
 
-  const renderItem: SectionListRenderItem<IEventPlan, ISectionData> = useCallback(
+  const renderItem: SectionListRenderItem<IPlan, ISectionData> = useCallback(
     ({ item, index }) => (
       <>
         <TimelineCheckpoint style={styles.planCheckpoint} type="plan" title={`Plan ${index + 1}`} />
@@ -75,7 +75,7 @@ const TimelineList: FC<Props> = ({
 
   const renderSectionHeader = useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
-    ({ section }: { section: SectionListData<IEventPlan, ISectionData> }) => (
+    ({ section }: { section: SectionListData<IPlan, ISectionData> }) => (
       <>
         {!!section.index && <View style={styles.verticalLine} />}
         <TimelineCheckpoint style={styles.monthCheckpoint} type="month" title={section.title} />

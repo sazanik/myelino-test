@@ -1,1 +1,1 @@
-export * from './httpClient';
+export { default as http } from './httpClient';

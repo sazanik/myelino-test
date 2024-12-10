@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import {
+  Alert,
   Image,
   ImageStyle,
   StyleProp,
@@ -10,9 +11,12 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import asyncStorage from '@react-native-async-storage/async-storage/src/AsyncStorage';
 
 import { CustomInput } from '@/components';
+import { http } from '@/config';
 import { ROUTE, TOUCHABLE_OPACITY } from '@/constants';
+import { normalizeError } from '@/helpers';
 import { useForm, useTheme, useTypedNavigation } from '@/hooks';
 import { CreateStylesFn } from '@/types';
 
@@ -56,12 +60,10 @@ const AuthScreen = () => {
   const { top } = useSafeAreaInsets();
   const colorScheme = useColorScheme();
 
-  const { identifier, password, onChange } = useForm({
-    identifier: '',
-    password: '',
+  const { identifier, password, onChange, reset } = useForm({
+    identifier: 'username',
+    password: 'password',
   });
-
-  const [isLogged] = useState(true);
 
   const handleIdentifierChange = useCallback(
     (value: string) => {
@@ -80,35 +82,39 @@ const AuthScreen = () => {
   const handleLoginPress = async () => {
     // They block is commented out to log in because the server was unavailable during development
 
-    // if ([identifier, password].includes('')) {
-    //   Alert.alert('Error', 'All fields are required');
-    //   return;
-    // }
-    //
-    // try {
-    //   await axiosClient.post('/auth/sign-in', { identifier, password });
-    //
-    //   reset();
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{ name: ROUTE.plan.plans }],
-    //   });
-    // } catch (error: unknown) {
-    //   const errorMessage = normalizeError(error);
-    //
-    //   Alert.alert('Error', errorMessage);
-    // }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: ROUTE.plan.plans }],
-    });
+    if ([identifier, password].includes('')) {
+      Alert.alert('Error', 'All fields are required');
+      return;
+    }
+
+    try {
+      const {
+        data: { token },
+      } =
+        (await http.post<{ token: string }>('/auth/login', {
+          identifier,
+          password,
+        })) ?? [];
+
+      asyncStorage.setItem('token', token);
+
+      reset();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: ROUTE.plan.plans }],
+      });
+    } catch (error: unknown) {
+      const errorMessage = normalizeError(error);
+
+      Alert.alert('Error', errorMessage);
+    }
   };
 
-  useEffect(() => {
-    if (isLogged) {
-      setTimeout(() => navigation.navigate(ROUTE.plan.plans), 0);
-    }
-  }, [isLogged, navigation]);
+  // useEffect(() => {
+  //   if (isLogged) {
+  //     setTimeout(() => navigation.navigate(ROUTE.plan.plans), 0);
+  //   }
+  // }, [isLogged, navigation]);
 
   return (
     <>
