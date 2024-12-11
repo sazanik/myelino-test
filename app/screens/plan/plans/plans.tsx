@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
@@ -18,8 +18,14 @@ import {
 import { CURRENT_MONTH_OPTION, MONTHS_MAP, ROUTE, SCREEN_PADDING } from '@/constants';
 import { useThemeContext } from '@/contexts/useThemeContext';
 import { useUserContext } from '@/contexts/useUserContext';
-import { useForm, usePlansData, useTheme, useTypedNavigation } from '@/hooks';
-import { useEventCreate } from '@/hooks/useEventCreate';
+import {
+  useEventCreate,
+  useEventDelete,
+  useForm,
+  usePlansData,
+  useTheme,
+  useTypedNavigation,
+} from '@/hooks';
 import { IEventCreateDto } from '@/services';
 import { CreateStylesFn, IEvent, IOption, IPlan } from '@/types';
 
@@ -76,10 +82,17 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
     marginTop: 40,
     backgroundColor: colors.common.screenBackground,
   },
+  selectPlanTitle: {
+    marginTop: 10,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    color: colors.common.text.brand,
+  },
   selectablePlanList: {
-    marginTop: 20,
+    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    rowGap: 4,
   },
   selectedPlan: {
     borderRadius: 10,
@@ -87,6 +100,7 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
     borderWidth: 1,
     backgroundColor: colors.common.button.primary.background,
   },
+
   dateButton: {
     marginTop: 20,
     width: '100%',
@@ -129,6 +143,7 @@ const PlansScreen = () => {
 
   const { plansByMonths, allSavedEventsPlan, plans, loading } = usePlansData();
   const { createEvent } = useEventCreate();
+  const { deleteEvent } = useEventDelete();
 
   const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
   const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
@@ -153,7 +168,7 @@ const PlansScreen = () => {
     title: '',
     invitedPersonsCount: '',
     cost: '',
-    dtStart: Date.now(),
+    dtStart: null,
   });
 
   const handleDtStartChange = useCallback(
@@ -238,9 +253,24 @@ const PlansScreen = () => {
     [plansByMonths]
   );
 
-  const handleEventItemPress = useCallback((event: IEvent) => {
-    console.log(event);
-  }, []);
+  const handleEventItemPress = useCallback(
+    (event: IEvent) => {
+      Alert.alert(
+        'Confirm Deletion', // Заголовок
+        'Are you sure you want to delete this event?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => deleteEvent({ planId: event.planId, id: event.id ?? '' }),
+          },
+        ],
+        { cancelable: true }
+      );
+    },
+    [deleteEvent]
+  );
 
   const handlePlanPress = useCallback(
     (plan: IPlan) => {
@@ -278,6 +308,8 @@ const PlansScreen = () => {
   const ListHeaderComponent = useMemo(
     () => (
       <>
+        {/* TODO: for testing event creation and logout */}
+        {/* logout on ios cause crash for now, need investigation */}
         <Modal.Children visible={menuModalVisibility} setVisibility={setMenuModalVisibility}>
           <Text>Create Event</Text>
           <CustomInput
@@ -300,6 +332,7 @@ const PlansScreen = () => {
             onChangeText={(value) => onChangeEventForm(value, 'cost')}
             placeholder="Cost"
           />
+          <Text style={styles.selectPlanTitle}>Select plan below</Text>
           <View style={styles.selectablePlanList}>
             {plans.map((item) => (
               <TouchableOpacity
@@ -318,7 +351,7 @@ const PlansScreen = () => {
           </TouchableOpacity>
           {datePickerVisibility && (
             <DateTimePicker
-              value={new Date(dtStart)}
+              value={new Date(dtStart ?? Date.now())}
               mode="date"
               display="default"
               onChange={handleDtStartChange}
@@ -364,11 +397,13 @@ const PlansScreen = () => {
               plan={allSavedEventsPlan}
               onItemPress={handlePlanPress}
             />
-            <TimelineCheckpoint
-              style={styles.topTimelineCheckpoint}
-              type="urgent"
-              title={topTimelineCheckpointTitle}
-            />
+            {!!selectedEvents?.length && (
+              <TimelineCheckpoint
+                style={styles.topTimelineCheckpoint}
+                type="urgent"
+                title={topTimelineCheckpointTitle}
+              />
+            )}
             <EventList.Default
               style={styles.eventList}
               contentStyle={styles.eventListContent}

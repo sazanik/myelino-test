@@ -28,8 +28,13 @@ export interface IEventCreateDto {
   cost: number;
 }
 
+export interface IEventDeleteParams {
+  planId: string;
+  id: string;
+}
+
 export const getPlans = async (): Promise<IPlan[]> => {
-  const { data: plans } = (await http.get<IPlanDto[]>(`/plans`)) || {};
+  const { data: plans } = (await http.get<IPlanDto[]>(`/plans`)) ?? {};
 
   const preparedPlans = await Promise.all(
     plans.map(async (plan) => {
@@ -46,9 +51,13 @@ export const getPlans = async (): Promise<IPlan[]> => {
 };
 
 export const createEvent = async (item: IEventCreateDto): Promise<IEvent> => {
-  const { data: event } = (await http.post<IEventDto>(`/plans/${item.planId}/events`, item)) || {};
+  const { data: event } = (await http.post<IEventDto>(`/plans/${item.planId}/events`, item)) ?? {};
 
   const preparedEvent = { ...event, title: event.name };
 
   return preparedEvent;
+};
+
+export const deleteEvent = async ({ planId, id }: IEventDeleteParams): Promise<void> => {
+  await http.delete(`/plans/${planId}/events/${id}`);
 };

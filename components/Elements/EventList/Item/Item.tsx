@@ -11,7 +11,7 @@ import {
 
 import { LocationIcon, MoneyIcon, PeopleIcon } from '@/assets/icons';
 import Label from '@/components/Elements/EventList/Item/Label';
-import { BASE_URL, TOUCHABLE_OPACITY } from '@/constants';
+import { TOUCHABLE_OPACITY } from '@/constants';
 import { normalizeImageUrl } from '@/helpers';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEvent } from '@/types';

@@ -15,11 +15,14 @@ The project is built in a conveniently scalable structure
 - ContextAPI is selected as the global state control. As an example, a theme switch independent of the device theme is implemented
 - Fully working dark theme
 - As for the logic, I tried to use my observation experience and skills and implemented the most convenient version of the logic where it was not quite obvious from the user's point of view
+- Implemented the `React Query` for caching and advanced data fetching
 
-Since the server always returned a 404 code on any endpoints, including those with provided credentials, it was decided to build the project on typed mocks so that server interaction could be quickly hooked up if needed
+Since the server always returned a 404 code on any endpoints,
+including those with provided credentials,
+it was decided to build the own simple server on the Koa and filesystem storage on localhost (for quick development).
 
 This project is almost completely ready for commercial use the only thing left is
-to add an internationalization-framework such as `i18n`
+to add an internationalization-framework such as `i18n`, loader components and the optimistic updates for server calls
 
 
 Enjoy using it!
@@ -28,7 +31,24 @@ Enjoy using it!
 
 ## Instructions
 
-This repository contains the base project for the Myelino technical test in React Native. Follow the instructions below to clone the project, install dependencies, initialize the project, and review the pre-installed packages.
+To access the app, enter
+email or username in the corresponding field and password
+
+`email: test@gmail.com` or `username: username`
+`password: password`
+
+At this stage you can create events for the pre-created plans and delete them.
+To create an event, click on the menu icon in the header, enter the data and select the appropriate plan, then select the event date.
+
+The above user and the plans for him have been created in advance
+At this point, you can create events for pre-created plans and delete them.
+
+To create an event, click on the menu icon in the header, 
+enter the data and select the corresponding plan, 
+then select the event date (_to see plans divided by month, select the event date of the corresponding month, 
+as events for current month will be created for the Quick Plans plan_).
+
+To delete an event, press the event and confirm it
 
 ---
 

@@ -11,6 +11,7 @@ export interface IUser {
 
 export interface IEvent {
   id?: string;
+  planId: string;
   title: string;
   invitedPersonsCount: number;
   cost: number;
