@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from 'react-query';
 
-import { ALL_SAVED_EVENTS_PLAN_OPTION, CURRENT_MONTH_OPTION, MOCK_EVENTS_PLANS } from '@/constants';
+import { ALL_SAVED_EVENTS_PLAN_OPTION, CURRENT_MONTH_OPTION, QUERY_KEY } from '@/constants';
+import { getPlans } from '@/services';
 import { IPlan } from '@/types';
 
-export const useEventsData = () => {
-  const [eventsPlans, setEventsPlans] = useState<IPlan[]>([]);
-  const [loading, setLoading] = useState(true);
+export const usePlansData = () => {
+  const { data: plans = [], isLoading } = useQuery(QUERY_KEY.plans, getPlans);
 
   const plansByMonths = useMemo(
     () =>
-      eventsPlans.reduce(
+      plans.reduce(
         (acc, plan) => {
           const filteredPlan = {
             ...plan,
@@ -37,12 +38,12 @@ export const useEventsData = () => {
         },
         {} as Record<string, IPlan[]>
       ),
-    [eventsPlans]
+    [plans]
   );
 
   const allSavedEventsPlan: IPlan = useMemo(
     () =>
-      eventsPlans.reduce(
+      plans.reduce(
         (acc, plan) => {
           acc.events = [...acc.events, ...plan.events];
 
@@ -54,23 +55,8 @@ export const useEventsData = () => {
           events: [],
         }
       ),
-    [eventsPlans]
+    [plans]
   );
 
-  const fetchData = () => {
-    setTimeout(() => {
-      setEventsPlans(MOCK_EVENTS_PLANS);
-      setLoading(false);
-    }, 1000);
-  };
-
-  useEffect(() => {
-    fetchData();
-
-    return () => {
-      setLoading(false);
-    };
-  }, []);
-
-  return { allSavedEventsPlan, eventsPlans, plansByMonths, loading };
+  return { allSavedEventsPlan, plans, plansByMonths, loading: isLoading };
 };

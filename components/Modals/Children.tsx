@@ -18,7 +18,6 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
   },
   modal: {
     width: '90%',
-    height: '50%',
     borderRadius: 20,
     alignItems: 'center',
     padding: 20,

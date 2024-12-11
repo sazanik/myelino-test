@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {
+  CustomInput,
   DateGreeting,
   EventList,
   FilterPanel,
@@ -15,8 +17,10 @@ import {
 } from '@/components';
 import { CURRENT_MONTH_OPTION, MONTHS_MAP, ROUTE, SCREEN_PADDING } from '@/constants';
 import { useThemeContext } from '@/contexts/useThemeContext';
-import { useEventsData, useForm, useTheme, useTypedNavigation } from '@/hooks';
-import { getPlans } from '@/services';
+import { useUserContext } from '@/contexts/useUserContext';
+import { useForm, usePlansData, useTheme, useTypedNavigation } from '@/hooks';
+import { useEventCreate } from '@/hooks/useEventCreate';
+import { IEventCreateDto } from '@/services';
 import { CreateStylesFn, IEvent, IOption, IPlan } from '@/types';
 
 const createStyles: CreateStylesFn = ({ colors, insets }) => ({
@@ -72,6 +76,48 @@ const createStyles: CreateStylesFn = ({ colors, insets }) => ({
     marginTop: 40,
     backgroundColor: colors.common.screenBackground,
   },
+  selectablePlanList: {
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedPlan: {
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    backgroundColor: colors.common.button.primary.background,
+  },
+  dateButton: {
+    marginTop: 20,
+    width: '100%',
+    padding: 6,
+    backgroundColor: colors.common.button.secondary.background,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateButtonContent: {
+    color: colors.common.button.secondary.content,
+    fontSize: 14,
+    fontWeight: '400',
+  },
+  button: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.common.button.primary.background,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonContent: {
+    color: colors.common.button.primary.content,
+    fontSize: 14,
+    fontWeight: '400',
+  },
+  eventField: {
+    marginTop: 20,
+  },
 });
 
 const PlansScreen = () => {
@@ -79,30 +125,59 @@ const PlansScreen = () => {
   const { styles } = useTheme(createStyles);
 
   const { switchTheme } = useThemeContext();
+  const { logout } = useUserContext();
 
-  const { plansByMonths, allSavedEventsPlan, eventsPlans, loading } = useEventsData();
+  const { plansByMonths, allSavedEventsPlan, plans, loading } = usePlansData();
+  const { createEvent } = useEventCreate();
 
   const [selectedFilterItem, setSelectedFilterItem] = useState<undefined | IOption>();
   const [selectedEvents, setSelectedEvents] = useState<IEvent[]>([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [menuModalVisibility, setMenuModalVisibility] = useState(false);
+  const [datePickerVisibility, setDatePickerVisibility] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState<undefined | string>(undefined);
 
-  const { searchValue, onChange } = useForm({
+  const { searchValue, onChange: onChangeSearchValue } = useForm({
     searchValue: '',
   });
 
+  const {
+    dtStart,
+    invitedPersonsCount,
+    cost,
+    title,
+    onChange: onChangeEventForm,
+    form: eventForm,
+    reset: resetEventForm,
+  } = useForm({
+    title: '',
+    invitedPersonsCount: '',
+    cost: '',
+    dtStart: Date.now(),
+  });
+
+  const handleDtStartChange = useCallback(
+    (__event: unknown, selectedDate?: Date) => {
+      setDatePickerVisibility(false);
+
+      if (selectedDate) {
+        onChangeEventForm(selectedDate, 'dtStart');
+      }
+    },
+    [onChangeEventForm]
+  );
+
   const handleChangeSearchValue = useCallback(
     (value: string) => {
-      onChange(value, 'searchValue');
+      onChangeSearchValue(value, 'searchValue');
       setIsSearchActive(value.length > 2);
     },
-    [onChange]
+    [onChangeSearchValue]
   );
 
   const foundPlans = useMemo(
-    () =>
-      eventsPlans.filter((plan) => plan.title.toLowerCase().includes(searchValue.toLowerCase())),
-    [eventsPlans, searchValue]
+    () => plans.filter((plan) => plan.title.toLowerCase().includes(searchValue.toLowerCase())),
+    [plans, searchValue]
   );
 
   const planFilters = useMemo(
@@ -174,10 +249,89 @@ const PlansScreen = () => {
     [navigate]
   );
 
+  const handleSubmit = useCallback(() => {
+    if (Object.values(eventForm).some((value) => !value) || !selectedPlanId) {
+      return;
+    }
+
+    const event: IEventCreateDto = {
+      name: eventForm.title,
+      planId: selectedPlanId ?? '',
+      cost: Number(eventForm.cost),
+      invitedPersonsCount: Number(eventForm.invitedPersonsCount),
+      dtStart: Number(eventForm.dtStart),
+      dtEnd: Number(eventForm.dtStart),
+    };
+
+    createEvent(event);
+    resetEventForm();
+    setSelectedPlanId(undefined);
+    setMenuModalVisibility(false);
+  }, [createEvent, eventForm, resetEventForm, selectedPlanId]);
+
+  const handleLogout = useCallback(() => {
+    setMenuModalVisibility(false);
+
+    logout();
+  }, [logout]);
+
   const ListHeaderComponent = useMemo(
     () => (
       <>
-        <Modal.Children visible={menuModalVisibility} setVisibility={setMenuModalVisibility} />
+        <Modal.Children visible={menuModalVisibility} setVisibility={setMenuModalVisibility}>
+          <Text>Create Event</Text>
+          <CustomInput
+            style={styles.eventField}
+            value={title}
+            onChangeText={(value) => onChangeEventForm(value, 'title')}
+            placeholder="Title"
+          />
+          <CustomInput
+            style={styles.eventField}
+            keyboardType="numeric"
+            value={invitedPersonsCount.toString()}
+            onChangeText={(value) => onChangeEventForm(value, 'invitedPersonsCount')}
+            placeholder="Invited persons count"
+          />
+          <CustomInput
+            style={styles.eventField}
+            keyboardType="numeric"
+            value={cost.toString()}
+            onChangeText={(value) => onChangeEventForm(value, 'cost')}
+            placeholder="Cost"
+          />
+          <View style={styles.selectablePlanList}>
+            {plans.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={selectedPlanId === item.id && styles.selectedPlan}
+                onPress={() => setSelectedPlanId(item.id)}
+              >
+                <Text>{item.title}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TouchableOpacity style={styles.dateButton} onPress={() => setDatePickerVisibility(true)}>
+            <Text style={styles.dateButtonContent}>
+              {dtStart ? new Date(dtStart).toDateString() : 'Select date'}
+            </Text>
+          </TouchableOpacity>
+          {datePickerVisibility && (
+            <DateTimePicker
+              value={new Date(dtStart)}
+              mode="date"
+              display="default"
+              onChange={handleDtStartChange}
+              minimumDate={new Date()}
+            />
+          )}
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttonContent}>Create event</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogout}>
+            <Text style={styles.buttonContent}>Logout</Text>
+          </TouchableOpacity>
+        </Modal.Children>
         <Header
           style={styles.header}
           title="Planner"
@@ -191,7 +345,6 @@ const PlansScreen = () => {
           onChangeText={handleChangeSearchValue}
         />
         <Text style={styles.title}>Plans</Text>
-
         {isSearchActive ? (
           <View style={styles.foundPlans}>
             {foundPlans.map((plan) => (
@@ -230,6 +383,15 @@ const PlansScreen = () => {
     [
       menuModalVisibility,
       styles,
+      title,
+      invitedPersonsCount,
+      cost,
+      plans,
+      dtStart,
+      datePickerVisibility,
+      handleDtStartChange,
+      handleSubmit,
+      handleLogout,
       switchTheme,
       searchValue,
       handleChangeSearchValue,
@@ -243,6 +405,8 @@ const PlansScreen = () => {
       topTimelineCheckpointTitle,
       selectedEvents,
       handleEventItemPress,
+      onChangeEventForm,
+      selectedPlanId,
     ]
   );
 
@@ -252,10 +416,6 @@ const PlansScreen = () => {
       setSelectedEvents(currentMonthEvents);
     }
   }, [planFilters, currentMonthEvents]);
-
-  useEffect(() => {
-    getPlans({ userId: '1' }).then(console.log);
-  }, []);
 
   if (loading) {
     return <Loader />;

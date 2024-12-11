@@ -118,11 +118,11 @@ const AuthScreen = () => {
       return;
     }
 
-    const user = await verifyToken(token);
+    const verifiedUser = await verifyToken(token);
 
-    setUser(user);
+    setUser(verifiedUser);
 
-    if (user) {
+    if (verifiedUser) {
       navigation.reset({
         index: 0,
         routes: [{ name: ROUTE.plan.plans }],

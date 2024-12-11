@@ -1,5 +1,13 @@
 import { FC, useState } from 'react';
-import { Platform, Pressable, StyleProp, TextInput, View, ViewStyle } from 'react-native';
+import {
+  KeyboardTypeOptions,
+  Platform,
+  Pressable,
+  StyleProp,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/hooks';
@@ -41,15 +49,19 @@ const createStyles: CreateStylesFn = ({ colors }) => ({
 
 interface Props {
   value: string;
-  type?: 'email' | 'password';
+  type?: 'email' | 'password' | 'default';
+  keyboardType?: KeyboardTypeOptions;
+  placeholder?: string;
   style?: StyleProp<ViewStyle>;
   onChangeText?: (text: string) => void;
 }
 
 const CustomInput: FC<Props> = ({
-  type = 'email',
   value,
   onChangeText = () => {},
+  placeholder = '',
+  type = 'default',
+  keyboardType = 'default',
   style = {},
 }: Props) => {
   const { styles, colors } = useTheme(createStyles);
@@ -58,19 +70,21 @@ const CustomInput: FC<Props> = ({
 
   return (
     <View style={[styles.container, styles.shadow, style]}>
-      <Ionicons
-        name={type === 'email' ? 'mail-outline' : 'lock-closed-outline'}
-        size={18}
-        color={colors.common.text.primary}
-      />
+      {type !== 'default' && (
+        <Ionicons
+          name={type === 'email' ? 'mail-outline' : 'lock-closed-outline'}
+          size={18}
+          color={colors.common.text.primary}
+        />
+      )}
       <TextInput
         style={styles.input}
         placeholderTextColor={colors.common.text.placeholder}
         value={value}
-        keyboardType={type === 'email' ? 'email-address' : 'default'}
+        keyboardType={keyboardType ?? (type === 'email' ? 'email-address' : 'default')}
         onChangeText={onChangeText}
         secureTextEntry={type === 'password' && !visible}
-        placeholder={type === 'email' ? 'Email Address/Username' : 'Password'}
+        placeholder={placeholder ?? (type === 'email' ? 'Email Address/Username' : 'Password')}
       />
       {type === 'password' && (
         <Pressable onPress={() => setVisible(!visible)}>

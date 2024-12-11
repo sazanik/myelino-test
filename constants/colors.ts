@@ -1,5 +1,6 @@
 // common colors
-const PRIMARY_TEXT_COLOR = '#FFFFFF';
+const WHITE_TEXT_COLOR = '#FFFFFF';
+const BALCK_TEXT_COLOR = '#121212';
 
 // light colors theme
 const PRIMARY_TEXT_COLOR_LIGHT = '#292941';
@@ -35,13 +36,17 @@ export const COLORS = {
       },
       button: {
         primary: {
-          content: PRIMARY_TEXT_COLOR,
+          content: WHITE_TEXT_COLOR,
           background: BRAND_GREEN_COLOR_LIGHT,
+        },
+        secondary: {
+          content: WHITE_TEXT_COLOR,
+          background: PRIMARY_TEXT_COLOR_LIGHT,
         },
       },
       icon: {
         background: BRAND_GREEN_COLOR_LIGHT,
-        content: PRIMARY_TEXT_COLOR,
+        content: WHITE_TEXT_COLOR,
       },
       text: {
         primary: PRIMARY_TEXT_COLOR_LIGHT,
@@ -67,7 +72,7 @@ export const COLORS = {
     },
     eventList: {
       item: {
-        text: PRIMARY_TEXT_COLOR,
+        text: WHITE_TEXT_COLOR,
         label: {
           content: '#FFFFFFB2',
           background: '#FFFFFF4D',
@@ -77,7 +82,7 @@ export const COLORS = {
     planCard: {
       divider: '#ededed',
       counter: {
-        text: PRIMARY_TEXT_COLOR,
+        text: WHITE_TEXT_COLOR,
       },
       imageBox: {
         border: '#FFFFFF',
@@ -116,13 +121,17 @@ export const COLORS = {
       },
       button: {
         primary: {
-          content: PRIMARY_TEXT_COLOR,
+          content: BALCK_TEXT_COLOR,
           background: BRAND_GREEN_COLOR_LIGHT,
+        },
+        secondary: {
+          content: BALCK_TEXT_COLOR,
+          background: SECONDARY_TEXT_COLOR_DARK,
         },
       },
       icon: {
         background: BRAND_GREEN_COLOR_DARK,
-        content: PRIMARY_TEXT_COLOR,
+        content: BALCK_TEXT_COLOR,
       },
       text: {
         primary: PRIMARY_TEXT_COLOR_DARK,
@@ -148,7 +157,7 @@ export const COLORS = {
     },
     eventList: {
       item: {
-        text: PRIMARY_TEXT_COLOR,
+        text: BALCK_TEXT_COLOR,
         label: {
           content: '#FFFFFFB2',
           background: '#FFFFFF4D',
@@ -158,7 +167,7 @@ export const COLORS = {
     planCard: {
       divider: '#EDEDED70',
       counter: {
-        text: PRIMARY_TEXT_COLOR,
+        text: BALCK_TEXT_COLOR,
       },
       imageBox: {
         border: '#FFFFFF',
