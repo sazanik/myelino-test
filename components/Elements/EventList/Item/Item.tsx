@@ -11,7 +11,8 @@ import {
 
 import { LocationIcon, MoneyIcon, PeopleIcon } from '@/assets/icons';
 import Label from '@/components/Elements/EventList/Item/Label';
-import { TOUCHABLE_OPACITY } from '@/constants';
+import { BASE_URL, TOUCHABLE_OPACITY } from '@/constants';
+import { normalizeImageUrl } from '@/helpers';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IEvent } from '@/types';
 
@@ -95,7 +96,7 @@ const Item: FC<Props> = ({ event, onPress, style = null }) => {
     >
       <Image
         style={styles.image as StyleProp<ImageStyle>}
-        source={{ uri: event.imageUrl }}
+        source={{ uri: normalizeImageUrl(event.imageUrl) }}
         resizeMode="cover"
       />
       <View style={styles.imageOverlay} />

@@ -1,11 +1,10 @@
-import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-const baseURL = `http://${Platform.select({ ios: 'localhost', android: '10.0.2.2' })}:3000`;
+import { BASE_URL } from '@/constants';
 
 const httpClient: AxiosInstance = axios.create({
-  baseURL,
+  baseURL: BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

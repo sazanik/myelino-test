@@ -35,7 +35,7 @@ export const getPlans = async (): Promise<IPlan[]> => {
     plans.map(async (plan) => {
       const { data: events } = await http.get<IEventDto[]>(`/plans/${plan.id}/events`);
       return {
-        ...plan,
+        id: plan.id,
         title: plan.name,
         events: (events ?? []).map<IEvent>((item) => ({ ...item, title: item.name })),
       };

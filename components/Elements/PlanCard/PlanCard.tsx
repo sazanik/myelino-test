@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { TOUCHABLE_OPACITY } from '@/constants';
+import { normalizeImageUrl } from '@/helpers';
 import { useTheme } from '@/hooks';
 import { CreateStylesFn, IPlan } from '@/types';
 
@@ -157,7 +158,10 @@ const PlanCard: FC<Props> = ({ plan, onItemPress, style }) => {
               idx !== 2 && styles.imageBoxShadow,
             ]}
           >
-            <Image style={styles.image as StyleProp<ImageStyle>} source={{ uri: event.imageUrl }} />
+            <Image
+              style={styles.image as StyleProp<ImageStyle>}
+              source={{ uri: normalizeImageUrl(event.imageUrl) }}
+            />
           </View>
         ))}
       </View>
